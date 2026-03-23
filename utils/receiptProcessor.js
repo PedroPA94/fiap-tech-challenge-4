@@ -1,4 +1,4 @@
-import { File, EncodingType } from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 
 const MAX_FILE_SIZE = 300 * 1024; // 300KB
 
@@ -12,15 +12,15 @@ export const processReceipt = async (file) => {
   }
 
   if (!size) {
-    const fileInfo = await new File.info(uri);
+    const fileInfo = await FileSystem.getInfoAsync(uri);
 
     if (fileInfo.size > MAX_FILE_SIZE) {
       throw new Error("O arquivo deve ter no máximo 300KB");
     }
   }
 
-  const base64 = await new File.text(uri, {
-    encoding: EncodingType.Base64,
+  const base64 = await FileSystem.readAsStringAsync(uri, {
+    encoding: "base64",
   });
 
   return {

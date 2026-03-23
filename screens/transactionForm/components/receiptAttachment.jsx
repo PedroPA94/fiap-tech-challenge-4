@@ -2,12 +2,15 @@ import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Typography from "../../../components/typography";
 import { colors, radius, spacing, typography } from "../../../styles/theme";
+import { useState } from "react";
 
 import * as DocumentPicker from "expo-document-picker";
 
 const MAX_FILE_SIZE = 300 * 1024; // 300KB
 
 export default function ReceiptAttachment({ onChange }) {
+  const [fileName, setFileName] = useState(null); // 👈 estado novo
+
   const handlePickFile = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
@@ -27,6 +30,8 @@ export default function ReceiptAttachment({ onChange }) {
         return;
       }
 
+      setFileName(file.name); // 👈 salva o nome
+
       onChange?.({
         uri: file.uri,
         mimeType: file.mimeType,
@@ -45,8 +50,9 @@ export default function ReceiptAttachment({ onChange }) {
       activeOpacity={0.7}
     >
       <Ionicons name="attach" size={24} color={colors.textSecondary} />
+
       <Typography style={styles.receiptText}>
-        Anexar comprovante (até 300KB)
+        {fileName ? `Arquivo: ${fileName}` : "Anexar comprovante (até 300KB)"}
       </Typography>
     </TouchableOpacity>
   );
