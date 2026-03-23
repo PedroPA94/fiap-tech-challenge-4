@@ -97,6 +97,10 @@ npx expo start
 
 Vídeo demonstrando as principais funcionalidades da aplicação:
 
+https://github.com/user-attachments/assets/4c407024-4288-4f91-ade2-1180eee01ca6
+
+
+
 ## Contribuições Futuras
 
 As possibilidades de evolução do projeto incluem:
