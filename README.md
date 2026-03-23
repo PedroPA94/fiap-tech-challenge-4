@@ -1,50 +1,107 @@
-# Welcome to your Expo app 👋
+# Bytebank — Tech Challenge Fase 3
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**Bytebank** é uma aplicação de **gerenciamento financeiro mobile** desenvolvida como parte do **Tech Challenge da Pós-Tech em Front-end Engineering (FIAP)**.
 
-## Get started
+Nesta fase, o projeto evolui para uma aplicação **mobile nativa com React Native**, integrando serviços em nuvem para oferecer uma experiência completa de gerenciamento financeiro, incluindo autenticação, persistência de dados e upload de comprovantes.
 
-1. Install dependencies
+[Repositório no Github](https://github.com/PedroPA94/fiap-tech-challenge-3)
 
-   ```bash
-   npm install
-   ```
+[Conheça a fase 2 do projeto](https://github.com/PedroPA94/fiap-tech-challenge-2)
 
-2. Start the app
+## Desafios do projeto
 
-   ```bash
-   npx expo start
-   ```
+### Fase 3 — Aplicação Mobile com Firebase e Funcionalidades Avançadas
 
-In the output, you'll find options to open the app in a
+Na Fase 3, o projeto foi expandido com:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+* **Aplicação Mobile:** Desenvolvimento com React Native utilizando Expo
+* **Autenticação:** Integração com Firebase Authentication
+* **Persistência em Cloud:** Utilização do Cloud Firestore para armazenamento das transações
+* **Gerenciamento de Estado:** Context API para controle global da aplicação
+* **Validações:** Validação de campos no cadastro de transações
+* **UX Mobile:** Interface adaptada para dispositivos móveis
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Funcionalidades da aplicação
 
-## Get a fresh project
+A aplicação implementa as seguintes funcionalidades:
 
-When you're ready, run:
+* **Autenticação:** Login de usuários com persistência de sessão
+* **Dashboard:** Exibição de informações financeiras baseadas nas transações do usuário
+* **Transações:**
 
-```bash
-npm run reset-project
+  * Listagem de transações do usuário autenticado
+  * Filtros por critérios como categoria e data
+* **Gerenciamento de Transações:**
+
+  * Criação de novas transações
+  * Edição de transações existentes
+  * Validação de dados
+* **Anexos:**
+
+  * Upload de comprovantes (imagem ou PDF)
+  * Validação de tamanho de arquivo (até 300KB)
+
+## Tecnologias utilizadas
+
+* **React Native**
+* **Expo**
+* **Firebase (Auth, Firestore)**
+* **Context API**
+* **AsyncStorage**
+* **Expo Router**
+* **Expo Document Picker**
+* **Expo File System**
+
+## Configuração do Firebase
+
+```js
+const firebaseConfig = {
+  apiKey: "AIzaSyASdG81ZzExByrwbZwWB-sPIfcZlz5j07g",
+  authDomain: "fiap-tech-challenge-3-31728.firebaseapp.com",
+  projectId: "fiap-tech-challenge-3-31728",
+  storageBucket: "fiap-tech-challenge-3-31728.firebasestorage.app",
+  messagingSenderId: "70615285266",
+  appId: "1:70615285266:web:520d4759930324c69222cb",
+  measurementId: "G-LX9PCCYMFE",
+  databaseURL: "",
+};
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Como executar o projeto
 
-## Learn more
+### 1. Clonar o repositório
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+git clone https://github.com/PedroPA94/fiap-tech-challenge-3.git
+cd fiap-tech-challenge-3
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### 2. Instalar dependências
 
-## Join the community
+```bash
+npm install
+```
 
-Join our community of developers creating universal apps.
+### 3. Executar a aplicação
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+npx expo start
+```
+
+### 4. Rodar no dispositivo
+
+* Instale o **Expo Go** no celular
+* Escaneie o QR Code exibido no terminal
+
+## Demonstração
+
+Vídeo demonstrando as principais funcionalidades da aplicação:
+
+## Contribuições Futuras
+
+As possibilidades de evolução do projeto incluem:
+
+* Paginação ou scroll infinito otimizado
+* Melhorias na experiência do usuário (UX/UI)
+* Testes automatizados
+* Personalização do dashboard pelo usuário
