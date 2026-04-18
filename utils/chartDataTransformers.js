@@ -5,17 +5,17 @@ export const transformExpensesByCategoryData = (transactions) => {
     return [];
   }
 
-  const expenses = transactions.filter((tx) => tx.type === "expense");
+  const expenses = transactions.filter((t) => t.isExpense());
 
   if (expenses.length === 0) {
     return [];
   }
 
-  const categoryTotals = expenses.reduce((acc, tx) => {
-    if (!acc[tx.category]) {
-      acc[tx.category] = 0;
+  const categoryTotals = expenses.reduce((acc, t) => {
+    if (!acc[t.category]) {
+      acc[t.category] = 0;
     }
-    acc[tx.category] += Math.abs(tx.value);
+    acc[t.category] += t.getAbsoluteValue();
     return acc;
   }, {});
 
@@ -65,15 +65,15 @@ export const transformCashFlowData = (transactions) => {
     };
   }
 
-  transactions.forEach((tx) => {
-    const txDate = new Date(tx.date);
-    const monthKey = `${txDate.getFullYear()}-${String(txDate.getMonth() + 1).padStart(2, "0")}`;
+  transactions.forEach((t) => {
+    const tDate = t.date;
+    const monthKey = `${tDate.getFullYear()}-${String(tDate.getMonth() + 1).padStart(2, "0")}`;
 
     if (monthsData[monthKey]) {
-      if (tx.type === "income") {
-        monthsData[monthKey].income += tx.value;
+      if (t.isIncome()) {
+        monthsData[monthKey].income += t.value;
       } else {
-        monthsData[monthKey].expense += Math.abs(tx.value);
+        monthsData[monthKey].expense += t.getAbsoluteValue();
       }
     }
   });
@@ -91,12 +91,12 @@ export const calculateTotals = (transactions) => {
   }
 
   const income = transactions
-    .filter((tx) => tx.type === "income")
-    .reduce((sum, tx) => sum + tx.value, 0);
+    .filter((t) => t.isIncome())
+    .reduce((sum, t) => sum + t.value, 0);
 
   const expense = transactions
-    .filter((tx) => tx.type === "expense")
-    .reduce((sum, tx) => sum + Math.abs(tx.value), 0);
+    .filter((t) => t.isExpense())
+    .reduce((sum, t) => sum + t.getAbsoluteValue(), 0);
 
   const balance = income - expense;
 

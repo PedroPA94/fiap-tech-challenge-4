@@ -20,42 +20,22 @@ const TransactionsScreen = () => {
     loadTransactions();
   }, []);
 
-  const formattedTransactions = transactions.map((t) => {
-    const date = new Date(t.date);
-
-    return {
-      ...t,
-      date: new Intl.DateTimeFormat("pt-BR").format(date),
-      originalDate: t.date,
-    };
-  });
-
-  const filteredTransactions = formattedTransactions.filter((transaction) => {
-    if (selectedCategory && transaction.category !== selectedCategory) {
+  const filteredTransactions = transactions.filter((transaction) => {
+    if (selectedCategory && !transaction.matchesCategory(selectedCategory)) {
       return false;
     }
 
-    if (selectedDate) {
-      const [day, month, year] = selectedDate.split("/");
-      const searchDate = `${year}-${month}-${day}`;
-      const transactionDate = new Date(transaction.originalDate)
-        .toISOString()
-        .split("T")[0];
+    if (!transaction.matchesDate(selectedDate)) return false;
 
-      if (transactionDate !== searchDate) return false;
-    }
-
-    if (search.trim()) {
-      const query = search.toLowerCase().trim();
-      const descriptionMatch = transaction.description
-        .toLowerCase()
-        .includes(query);
-
-      return descriptionMatch;
-    }
+    if (!transaction.matchesSearch(search)) return false;
 
     return true;
   });
+
+  const formattedTransactions = filteredTransactions.map((t) => ({
+    ...t,
+    formattedDate: new Intl.DateTimeFormat("pt-BR").format(new Date(t.date)),
+  }));
 
   const editTransaction = (id) => {
     router.push("(modals)/transaction?id=" + id);
@@ -94,7 +74,7 @@ const TransactionsScreen = () => {
               />
             </View>
           }
-          data={filteredTransactions}
+          data={formattedTransactions}
           keyExtractor={(item) => item.id}
           renderItem={({ item, index }) => (
             <AnimatedTransactionItem
@@ -165,7 +145,7 @@ const AnimatedTransactionItem = ({ item, index, editTransaction }) => {
         category={item.category}
         value={item.value}
         description={item.description}
-        date={item.date}
+        date={item.formattedDate}
         onPress={() => editTransaction(item.id)}
       />
     </Animated.View>

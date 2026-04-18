@@ -18,7 +18,7 @@ const Header = () => {
     }
   };
 
-  const userName = user?.name.split(" ")[0] || "Usuário";
+  const userName = user.getFirstName() || "Usuário";
 
   return (
     <View style={styles.container}>

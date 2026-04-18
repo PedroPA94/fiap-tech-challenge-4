@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "../firebase/config";
 import { processReceipt } from "../utils/receiptProcessor";
+import { makeTransaction } from "../src/domain/entities/transaction";
 
 const COLLECTION_NAME = "transactions";
 
@@ -31,6 +32,15 @@ export const transactionService = {
         id: doc.id,
         ...doc.data(),
       }))
+      .filter((data) => {
+        // Filtrar transações inválidas (sem date)
+        if (!data.date) {
+          console.warn("Transação ignorada: sem data", data);
+          return false;
+        }
+        return true;
+      })
+      .map((data) => makeTransaction(data))
       .sort((a, b) => new Date(b.date) - new Date(a.date));
   },
 
@@ -49,6 +59,13 @@ export const transactionService = {
       hasReceipt: !!receipt,
     });
 
+    const newTransaction = makeTransaction({
+      id: docRef.id,
+      ...rest,
+      userId: user.uid,
+      hasReceipt: !!receipt,
+    });
+
     if (receipt) {
       const processed = await processReceipt(receipt);
       const receiptRef = collection(db, COLLECTION_NAME, docRef.id, "receipts");
@@ -59,12 +76,7 @@ export const transactionService = {
       });
     }
 
-    return {
-      id: docRef.id,
-      ...rest,
-      userId: user.uid,
-      hasReceipt: !!receipt,
-    };
+    return newTransaction;
   },
 
   updateTransaction: async (id, transactionData) => {
@@ -98,12 +110,12 @@ export const transactionService = {
       });
     }
 
-    return {
+    return makeTransaction({
       id,
       ...rest,
       userId: user.uid,
       hasReceipt: !!receipt,
-    };
+    });
   },
 
   getTransactionById: async (id) => {
@@ -123,9 +135,9 @@ export const transactionService = {
       throw new Error("Acesso negado");
     }
 
-    return {
+    return makeTransaction({
       id: snapshot.id,
       ...data,
-    };
+    });
   },
 };

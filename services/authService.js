@@ -6,6 +6,7 @@ import {
 } from "firebase/auth";
 
 import { auth } from "../firebase/config";
+import { makeUser } from "../src/domain/entities/user";
 
 export const authService = {
   login: async (email, password) => {
@@ -18,12 +19,14 @@ export const authService = {
 
       const user = userCredential.user;
 
+      const userData = makeUser({
+        id: user.uid,
+        email: user.email,
+        name: user.displayName,
+      });
+
       return {
-        user: {
-          id: user.uid,
-          email: user.email,
-          name: user.displayName,
-        },
+        user: userData,
         token: await user.getIdToken(),
       };
     } catch (error) {
@@ -45,12 +48,14 @@ export const authService = {
         displayName: name,
       });
 
+      const userData = makeUser({
+        id: user.uid,
+        email: user.email,
+        name: name,
+      });
+
       return {
-        user: {
-          id: user.uid,
-          email: user.email,
-          name: name,
-        },
+        user: userData,
         token: await user.getIdToken(),
       };
     } catch (error) {

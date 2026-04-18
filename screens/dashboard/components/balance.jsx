@@ -8,17 +8,17 @@ import { useTransactions } from "../../../contexts/TransactionsContext";
 const Balance = () => {
   const { transactions } = useTransactions();
 
-  const totalBalance = transactions.reduce((sum, transaction) => {
-    return sum + transaction.value;
+  const totalBalance = transactions.reduce((sum, t) => {
+    return sum + t.value;
   }, 0);
 
   const totalIncome = transactions
-    .filter((t) => t.type === "income")
+    .filter((t) => t.isIncome())
     .reduce((sum, t) => sum + t.value, 0);
 
   const totalExpenses = transactions
-    .filter((t) => t.type === "expense")
-    .reduce((sum, t) => sum + Math.abs(t.value), 0);
+    .filter((t) => t.isExpense())
+    .reduce((sum, t) => sum + t.getAbsoluteValue(), 0);
 
   const formatCurrency = (value) => {
     return (
@@ -26,7 +26,7 @@ const Balance = () => {
       new Intl.NumberFormat("pt-BR", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
-      }).format(Math.abs(value))
+      }).format(value)
     );
   };
 
