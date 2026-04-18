@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "fiap-tech-challenge-3",
-    "slug": "fiap-tech-challenge-3",
+    "name": "fiap-tech-challenge-4",
+    "slug": "fiap-tech-challenge-4",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "fiaptechchallenge3",
+    "scheme": "fiaptechchallenge4",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
