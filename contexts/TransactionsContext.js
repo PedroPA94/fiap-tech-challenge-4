@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useCallback } from "react";
 import { firebaseTransactionRepository } from "../src/infrastructure/repositories/firebaseTransactionRepository";
 import { firebaseAuthRepository } from "../src/infrastructure/repositories/firebaseAuthRepository";
-import { firebaseReceiptService } from "../src/infrastructure/repositories/services/firebaseReceiptService";
+import { firebaseReceiptService } from "../src/infrastructure/services/firebaseReceiptService";
 import { getCurrentUser as getCurrentUserUC } from "../src/application/usecases/user";
 import {
   createTransaction as createTransactionUC,

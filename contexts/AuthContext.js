@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useCallback } from "react";
 import { authService } from "../services/authService";
+import { login as loginUC } from "../src/application/usecases/user";
+import { firebaseAuthRepository } from "../src/infrastructure/repositories/firebaseAuthRepository";
 
 const AuthContext = createContext();
 
@@ -14,7 +16,8 @@ export function AuthProvider({ children }) {
     setError(null);
 
     try {
-      const { user: userData, token: authToken } = await authService.login(
+      const { user: userData, token: authToken } = await loginUC(
+        firebaseAuthRepository,
         email,
         password,
       );

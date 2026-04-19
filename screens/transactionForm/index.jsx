@@ -28,7 +28,6 @@ import TransactionDateInput from "./components/transactionDateInput";
 import ReceiptAttachment from "./components/receiptAttachment";
 import { getTransactionById as getTransactionByIdUC } from "../../src/application/usecases/transaction";
 import { getCurrentUser as getCurrentUserUC } from "../../src/application/usecases/user";
-import { transactionService } from "../../services/transactionService";
 import { firebaseTransactionRepository } from "../../src/infrastructure/repositories/firebaseTransactionRepository";
 import { firebaseAuthRepository } from "../../src/infrastructure/repositories/firebaseAuthRepository";
 
