@@ -1,6 +1,9 @@
 import { createContext, useContext, useState, useCallback } from "react";
-import { authService } from "../services/authService";
-import { login as loginUC } from "../src/application/usecases/user";
+import {
+  login as loginUC,
+  register as registerUC,
+  logout as logoutUC,
+} from "../src/application/usecases/user";
 import { firebaseAuthRepository } from "../src/infrastructure/repositories/firebaseAuthRepository";
 
 const AuthContext = createContext();
@@ -38,7 +41,8 @@ export function AuthProvider({ children }) {
     setError(null);
 
     try {
-      const { user: userData, token: authToken } = await authService.register(
+      const { user: userData, token: authToken } = await registerUC(
+        firebaseAuthRepository,
         name,
         email,
         password,
@@ -60,7 +64,7 @@ export function AuthProvider({ children }) {
     setError(null);
 
     try {
-      await authService.logout();
+      await logoutUC(firebaseAuthRepository);
       setUser(null);
       setToken(null);
     } catch (err) {
