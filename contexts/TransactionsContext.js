@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useCallback } from "react";
-import { transactionService } from "../services/transactionService";
 import { firebaseTransactionRepository } from "../src/infrastructure/repositories/firebaseTransactionRepository";
 import { firebaseAuthRepository } from "../src/infrastructure/repositories/firebaseAuthRepository";
 import { firebaseReceiptService } from "../src/infrastructure/repositories/services/firebaseReceiptService";

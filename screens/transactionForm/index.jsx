@@ -26,7 +26,11 @@ import TransactionValueInput from "./components/transactionValueInput";
 import TransactionCategorySelector from "./components/transactionCategorySelector";
 import TransactionDateInput from "./components/transactionDateInput";
 import ReceiptAttachment from "./components/receiptAttachment";
+import { getTransactionById as getTransactionByIdUC } from "../../src/application/usecases/transaction";
+import { getCurrentUser as getCurrentUserUC } from "../../src/application/usecases/user";
 import { transactionService } from "../../services/transactionService";
+import { firebaseTransactionRepository } from "../../src/infrastructure/repositories/firebaseTransactionRepository";
+import { firebaseAuthRepository } from "../../src/infrastructure/repositories/firebaseAuthRepository";
 
 export default function TransactionFormScreen() {
   const { id } = useLocalSearchParams();
@@ -83,7 +87,12 @@ export default function TransactionFormScreen() {
 
     const loadTransaction = async () => {
       try {
-        const transaction = await transactionService.getTransactionById(id);
+        const user = getCurrentUserUC(firebaseAuthRepository);
+        const transaction = await getTransactionByIdUC(
+          id,
+          user.uid,
+          firebaseTransactionRepository,
+        );
 
         const date = new Date(transaction.date);
         const formattedDate =
@@ -126,7 +135,7 @@ export default function TransactionFormScreen() {
 
       const transactionData = {
         type: validValues.type,
-        value: parseFloat(validValues.value),
+        value: parseFloat(validValues.value.replace(",", ".")),
         category: validValues.category,
         description: validValues.description,
         date: isoDate,

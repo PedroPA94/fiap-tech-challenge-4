@@ -12,13 +12,6 @@ export const updateTransaction = async (
     throw new Error("ID da transação é obrigatório para atualização");
   }
 
-  console.log(
-    "Updating transaction with data:",
-    transactionData,
-    "and receipt:",
-    receipt,
-  );
-
   const transaction = makeTransaction({
     ...transactionData,
     id: transactionId,

@@ -2,6 +2,7 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
   getDocs,
   query,
   updateDoc,
@@ -24,6 +25,22 @@ export const firebaseTransactionRepository = {
       id: doc.id,
       ...doc.data(),
     }));
+  },
+
+  getById: async (id) => {
+    const docRef = doc(db, COLLECTION_NAME, id);
+    const snapshot = await getDoc(docRef);
+
+    if (!snapshot.exists()) {
+      return null;
+    }
+
+    const data = snapshot.data();
+
+    return {
+      id: snapshot.id,
+      ...data,
+    };
   },
 
   createTransaction: async (transactionData) => {
