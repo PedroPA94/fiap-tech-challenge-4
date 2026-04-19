@@ -4,8 +4,6 @@ import {
   updateDoc,
   doc,
   getDocs,
-  query,
-  where,
   deleteDoc,
   getDoc,
 } from "firebase/firestore";
@@ -16,34 +14,6 @@ import { makeTransaction } from "../src/domain/entities/transaction";
 const COLLECTION_NAME = "transactions";
 
 export const transactionService = {
-  loadTransactions: async () => {
-    const user = auth.currentUser;
-    if (!user) throw new Error("Usuário não autenticado");
-
-    const q = query(
-      collection(db, COLLECTION_NAME),
-      where("userId", "==", user.uid),
-    );
-
-    const snapshot = await getDocs(q);
-
-    return snapshot.docs
-      .map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }))
-      .filter((data) => {
-        // Filtrar transações inválidas (sem date)
-        if (!data.date) {
-          console.warn("Transação ignorada: sem data", data);
-          return false;
-        }
-        return true;
-      })
-      .map((data) => makeTransaction(data))
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
-  },
-
   addTransaction: async (transactionData) => {
     const user = auth.currentUser;
     if (!user) throw new Error("Usuário não autenticado");

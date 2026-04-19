@@ -1,5 +1,9 @@
 import { createContext, useContext, useState, useCallback } from "react";
 import { transactionService } from "../services/transactionService";
+import { firebaseTransactionRepository } from "../src/infrastructure/repositories/firebaseTransactionRepository";
+import { getUserTransactions } from "../src/application/usecases/transaction/getUserTransactions";
+import { getCurrentUser } from "../src/application/usecases/user/getCurrentUser";
+import { firebaseAuthRepository } from "../src/infrastructure/repositories/firebaseAuthRepository";
 
 const TransactionsContext = createContext();
 
@@ -18,7 +22,11 @@ export function TransactionsProvider({ children }) {
     setError(null);
 
     try {
-      const data = await transactionService.loadTransactions();
+      const user = getCurrentUser(firebaseAuthRepository);
+      const data = await getUserTransactions(
+        firebaseTransactionRepository,
+        user.uid,
+      );
       setTransactions(data);
       return data;
     } catch (err) {
