@@ -3,14 +3,18 @@ import { StyleSheet, View, ActivityIndicator, Alert } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import Button from "../../components/button";
-import Input from "../../components/input";
-import Typography from "../../components/typography";
-import { useForm } from "../../hooks/useForm";
-import { useValidators } from "../../hooks/useValidators";
-import { colors, spacing, typography } from "../../styles/theme";
+import Button from "../../src/presentation/components/button";
+import Input from "../../src/presentation/components/input";
+import Typography from "../../src/presentation/components/typography";
+import { useForm } from "../../src/presentation/hooks/useForm";
+import { useValidators } from "../../src/presentation/hooks/useValidators";
+import {
+  colors,
+  spacing,
+  typography,
+} from "../../src/presentation/styles/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../src/presentation/contexts/AuthContext";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const Register = () => {

@@ -3,7 +3,7 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "../../../firebase/config";
+import { auth } from "../config/firebase";
 
 export const firebaseAuthRepository = {
   getCurrentUser: () => {

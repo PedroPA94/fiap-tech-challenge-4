@@ -1,4 +1,4 @@
-import TransactionsScreen from "../../screens/transactions";
+import TransactionsScreen from "../../src/presentation/screens/transactions";
 
 const Transactions = () => {
   return <TransactionsScreen />;

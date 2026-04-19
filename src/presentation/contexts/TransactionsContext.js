@@ -1,13 +1,13 @@
 import { createContext, useContext, useState, useCallback } from "react";
-import { firebaseTransactionRepository } from "../src/infrastructure/repositories/firebaseTransactionRepository";
-import { firebaseAuthRepository } from "../src/infrastructure/repositories/firebaseAuthRepository";
-import { firebaseReceiptService } from "../src/infrastructure/services/firebaseReceiptService";
-import { getCurrentUser as getCurrentUserUC } from "../src/application/usecases/user";
+import { firebaseTransactionRepository } from "../../infrastructure/repositories/firebaseTransactionRepository";
+import { firebaseAuthRepository } from "../../infrastructure/repositories/firebaseAuthRepository";
+import { firebaseReceiptService } from "../../infrastructure/services/firebaseReceiptService";
+import { getCurrentUser as getCurrentUserUC } from "../../application/usecases/user";
 import {
   createTransaction as createTransactionUC,
   getUserTransactions as getUserTransactionsUC,
   updateTransaction as updateTransactionUC,
-} from "../src/application/usecases/transaction";
+} from "../../application/usecases/transaction";
 
 const TransactionsContext = createContext();
 

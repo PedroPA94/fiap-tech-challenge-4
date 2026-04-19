@@ -1,6 +1,6 @@
 import { addDoc, collection, deleteDoc, getDocs } from "firebase/firestore";
 import { processReceipt } from "./processReceipt";
-import { db } from "../../../firebase/config";
+import { db } from "../config/firebase";
 
 const COLLECTION_NAME = "transactions";
 

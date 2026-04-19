@@ -2,14 +2,18 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import Button from "../../components/button";
-import Input from "../../components/input";
-import Logo from "../../components/logo";
-import Typography from "../../components/typography";
-import { useAuth } from "../../contexts/AuthContext";
-import { useForm } from "../../hooks/useForm";
-import { useValidators } from "../../hooks/useValidators";
-import { colors, spacing, typography } from "../../styles/theme";
+import Button from "../../src/presentation/components/button";
+import Input from "../../src/presentation/components/input";
+import Logo from "../../src/presentation/components/logo";
+import Typography from "../../src/presentation/components/typography";
+import { useAuth } from "../../src/presentation/contexts/AuthContext";
+import { useForm } from "../../src/presentation/hooks/useForm";
+import { useValidators } from "../../src/presentation/hooks/useValidators";
+import {
+  colors,
+  spacing,
+  typography,
+} from "../../src/presentation/styles/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 

@@ -26,10 +26,10 @@ import TransactionValueInput from "./components/transactionValueInput";
 import TransactionCategorySelector from "./components/transactionCategorySelector";
 import TransactionDateInput from "./components/transactionDateInput";
 import ReceiptAttachment from "./components/receiptAttachment";
-import { getTransactionById as getTransactionByIdUC } from "../../src/application/usecases/transaction";
-import { getCurrentUser as getCurrentUserUC } from "../../src/application/usecases/user";
-import { firebaseTransactionRepository } from "../../src/infrastructure/repositories/firebaseTransactionRepository";
-import { firebaseAuthRepository } from "../../src/infrastructure/repositories/firebaseAuthRepository";
+import { getTransactionById as getTransactionByIdUC } from "../../../application/usecases/transaction";
+import { getCurrentUser as getCurrentUserUC } from "../../../application/usecases/user";
+import { firebaseTransactionRepository } from "../../../infrastructure/repositories/firebaseTransactionRepository";
+import { firebaseAuthRepository } from "../../../infrastructure/repositories/firebaseAuthRepository";
 
 export default function TransactionFormScreen() {
   const { id } = useLocalSearchParams();
@@ -110,7 +110,7 @@ export default function TransactionFormScreen() {
         if (transaction.receipt) {
           handleChange("receipt", transaction.receipt);
         }
-      } catch (error) {
+      } catch (_e) {
         Alert.alert("Erro", "Falha ao carregar transação");
         router.back();
       }

@@ -3,8 +3,8 @@ import {
   login as loginUC,
   register as registerUC,
   logout as logoutUC,
-} from "../src/application/usecases/user";
-import { firebaseAuthRepository } from "../src/infrastructure/repositories/firebaseAuthRepository";
+} from "../../application/usecases/user";
+import { firebaseAuthRepository } from "../../infrastructure/repositories/firebaseAuthRepository";
 
 const AuthContext = createContext();
 

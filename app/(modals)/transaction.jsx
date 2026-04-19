@@ -1,3 +1,3 @@
-import TransactionFormScreen from "../../screens/transactionForm";
+import TransactionFormScreen from "../../src/presentation/screens/transactionForm";
 
 export default TransactionFormScreen;

@@ -6,8 +6,11 @@ import {
 import { Stack } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { AuthProvider, useAuth } from "../contexts/AuthContext";
-import { TransactionsProvider } from "../contexts/TransactionsContext";
+import {
+  AuthProvider,
+  useAuth,
+} from "../src/presentation/contexts/AuthContext";
+import { TransactionsProvider } from "../src/presentation/contexts/TransactionsContext";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
