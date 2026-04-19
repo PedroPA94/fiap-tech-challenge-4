@@ -7,6 +7,7 @@ import { getCurrentUser as getCurrentUserUC } from "../src/application/usecases/
 import {
   createTransaction as createTransactionUC,
   getUserTransactions as getUserTransactionsUC,
+  updateTransaction as updateTransactionUC,
 } from "../src/application/usecases/transaction";
 
 const TransactionsContext = createContext();
@@ -77,9 +78,16 @@ export function TransactionsProvider({ children }) {
       setError(null);
 
       try {
-        const updatedTransaction = await transactionService.updateTransaction(
+        const { receipt, ...data } = transactionData;
+
+        const user = getCurrentUserUC(firebaseAuthRepository);
+        const updatedTransaction = await updateTransactionUC(
+          firebaseTransactionRepository,
+          firebaseReceiptService,
+          user.uid,
           id,
-          transactionData,
+          data,
+          receipt,
         );
 
         setTransactions((prev) =>

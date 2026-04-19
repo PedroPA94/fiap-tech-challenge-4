@@ -1,4 +1,12 @@
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "../../../firebase/config";
 
 const COLLECTION_NAME = "transactions";
@@ -24,5 +32,13 @@ export const firebaseTransactionRepository = {
     });
 
     return docRef.id;
+  },
+
+  updateTransaction: async (id, transactionData) => {
+    const docRef = doc(db, COLLECTION_NAME, id);
+
+    await updateDoc(docRef, {
+      ...transactionData,
+    });
   },
 };
