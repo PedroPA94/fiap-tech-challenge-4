@@ -1,11 +1,13 @@
 import { createContext, useContext, useState, useCallback } from "react";
 import { transactionService } from "../services/transactionService";
 import { firebaseTransactionRepository } from "../src/infrastructure/repositories/firebaseTransactionRepository";
-import { getUserTransactions } from "../src/application/usecases/transaction/getUserTransactions";
-import { getCurrentUser } from "../src/application/usecases/user/getCurrentUser";
 import { firebaseAuthRepository } from "../src/infrastructure/repositories/firebaseAuthRepository";
-import { createTransaction } from "../src/application/usecases/transaction/createTransaction";
 import { firebaseReceiptService } from "../src/infrastructure/repositories/services/firebaseReceiptService";
+import { getCurrentUser as getCurrentUserUC } from "../src/application/usecases/user";
+import {
+  createTransaction as createTransactionUC,
+  getUserTransactions as getUserTransactionsUC,
+} from "../src/application/usecases/transaction";
 
 const TransactionsContext = createContext();
 
@@ -24,8 +26,8 @@ export function TransactionsProvider({ children }) {
     setError(null);
 
     try {
-      const user = getCurrentUser(firebaseAuthRepository);
-      const data = await getUserTransactions(
+      const user = getCurrentUserUC(firebaseAuthRepository);
+      const data = await getUserTransactionsUC(
         firebaseTransactionRepository,
         user.uid,
       );
@@ -48,8 +50,8 @@ export function TransactionsProvider({ children }) {
       try {
         const { receipt, ...data } = transactionData;
 
-        const user = getCurrentUser(firebaseAuthRepository);
-        const newTransaction = await createTransaction(
+        const user = getCurrentUserUC(firebaseAuthRepository);
+        const newTransaction = await createTransactionUC(
           firebaseTransactionRepository,
           firebaseReceiptService,
           user.uid,
