@@ -4,6 +4,8 @@ import { firebaseTransactionRepository } from "../src/infrastructure/repositorie
 import { getUserTransactions } from "../src/application/usecases/transaction/getUserTransactions";
 import { getCurrentUser } from "../src/application/usecases/user/getCurrentUser";
 import { firebaseAuthRepository } from "../src/infrastructure/repositories/firebaseAuthRepository";
+import { createTransaction } from "../src/application/usecases/transaction/createTransaction";
+import { firebaseReceiptService } from "../src/infrastructure/repositories/services/firebaseReceiptService";
 
 const TransactionsContext = createContext();
 
@@ -44,8 +46,16 @@ export function TransactionsProvider({ children }) {
       setError(null);
 
       try {
-        const newTransaction =
-          await transactionService.addTransaction(transactionData);
+        const { receipt, ...data } = transactionData;
+
+        const user = getCurrentUser(firebaseAuthRepository);
+        const newTransaction = await createTransaction(
+          firebaseTransactionRepository,
+          firebaseReceiptService,
+          user.uid,
+          data,
+          receipt,
+        );
         setTransactions((prev) => sortTransactions([...prev, newTransaction]));
         return newTransaction;
       } catch (err) {

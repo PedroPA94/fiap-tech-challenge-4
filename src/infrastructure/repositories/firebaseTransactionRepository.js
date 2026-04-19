@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../firebase/config";
 
 const COLLECTION_NAME = "transactions";
@@ -16,5 +16,13 @@ export const firebaseTransactionRepository = {
       id: doc.id,
       ...doc.data(),
     }));
+  },
+
+  createTransaction: async (transactionData) => {
+    const docRef = await addDoc(collection(db, COLLECTION_NAME), {
+      ...transactionData,
+    });
+
+    return docRef.id;
   },
 };

@@ -49,5 +49,8 @@ export const makeTransaction = (data) => {
       if (!query?.trim()) return true;
       return this.description.toLowerCase().includes(query.toLowerCase());
     },
+    updateId: function (newId) {
+      return makeTransaction({ ...this, id: newId });
+    },
   });
 };
