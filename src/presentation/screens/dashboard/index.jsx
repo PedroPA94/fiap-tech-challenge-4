@@ -10,10 +10,10 @@ import {
 import { useRouter } from "expo-router";
 import IconButton from "../../components/iconButton";
 import { Ionicons } from "@expo/vector-icons";
-import { useTransactions } from "../../contexts/TransactionsContext";
 import { useEffect } from "react";
 import ExpenseByCategoryChart from "./components/charts/expenseByCategoryChart";
 import CashFlowChart from "./components/charts/cashFlowChart";
+import { useTransactions } from "../../state/hooks/useTransactions";
 
 const DashboardScreen = () => {
   const router = useRouter();

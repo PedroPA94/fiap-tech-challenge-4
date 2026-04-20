@@ -7,7 +7,7 @@ import TransactionItem from "./components/transactionItem";
 import TransactionsFilter from "./components/transactionsFilter";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import { useTransactions } from "../../contexts/TransactionsContext";
+import { useTransactions } from "../../state/hooks/useTransactions";
 
 const TransactionsScreen = () => {
   const router = useRouter();

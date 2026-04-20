@@ -20,7 +20,6 @@ import Typography from "../../components/typography";
 import { colors, spacing, typography } from "../../styles/theme";
 import { useForm } from "../../hooks/useForm";
 import { useValidators } from "../../hooks/useValidators";
-import { useTransactions } from "../../contexts/TransactionsContext";
 import TransactionTypeSelector from "./components/transactionTypeSelector";
 import TransactionValueInput from "./components/transactionValueInput";
 import TransactionCategorySelector from "./components/transactionCategorySelector";
@@ -30,6 +29,7 @@ import { getTransactionById as getTransactionByIdUC } from "../../../application
 import { getCurrentUser as getCurrentUserUC } from "../../../application/usecases/user";
 import { firebaseTransactionRepository } from "../../../infrastructure/repositories/firebaseTransactionRepository";
 import { firebaseAuthRepository } from "../../../infrastructure/repositories/firebaseAuthRepository";
+import { useTransactions } from "../../state/hooks/useTransactions";
 
 export default function TransactionFormScreen() {
   const { id } = useLocalSearchParams();

@@ -52,5 +52,17 @@ export const makeTransaction = (data) => {
     updateId: function (newId) {
       return makeTransaction({ ...this, id: newId });
     },
+    toJSON() {
+      return {
+        id: this.id,
+        userId: this.userId,
+        description: this.description,
+        type: this.type,
+        category: this.category,
+        hasReceipt: this.hasReceipt,
+        date: this.date.toISOString(),
+        value: this.value,
+      };
+    },
   });
 };

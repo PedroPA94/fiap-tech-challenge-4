@@ -6,7 +6,6 @@ import {
 import { Stack } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { TransactionsProvider } from "../src/presentation/contexts/TransactionsContext";
 import { Provider } from "react-redux";
 import { store } from "../src/presentation/state/store";
 import { useAuth } from "../src/presentation/state/hooks/useAuth";
@@ -24,9 +23,7 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <Provider store={store}>
-        <TransactionsProvider>
-          <RootNavigation />
-        </TransactionsProvider>
+        <RootNavigation />
       </Provider>
     </SafeAreaProvider>
   );

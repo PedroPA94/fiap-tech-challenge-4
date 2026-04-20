@@ -3,7 +3,7 @@ import Card from "../../../components/card";
 import InfoTile from "../../../components/infoTile";
 import Typography from "../../../components/typography";
 import { colors, spacing, typography } from "../../../styles/theme";
-import { useTransactions } from "../../../contexts/TransactionsContext";
+import { useTransactions } from "../../../state/hooks/useTransactions";
 
 const Balance = () => {
   const { transactions } = useTransactions();
