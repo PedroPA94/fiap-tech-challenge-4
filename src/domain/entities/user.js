@@ -18,5 +18,13 @@ export const makeUser = (data) => {
     getFirstName: function () {
       return this.name.split(" ")[0];
     },
+
+    toJSON() {
+      return {
+        id: this.id,
+        email: this.email,
+        name: this.name,
+      };
+    },
   });
 };

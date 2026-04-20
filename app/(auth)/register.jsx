@@ -14,8 +14,8 @@ import {
   typography,
 } from "../../src/presentation/styles/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuth } from "../../src/presentation/contexts/AuthContext";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useAuth } from "../../src/presentation/state/hooks/useAuth";
 
 const Register = () => {
   const router = useRouter();

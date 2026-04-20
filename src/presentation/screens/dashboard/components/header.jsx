@@ -4,8 +4,7 @@ import { StyleSheet, View } from "react-native";
 import IconButton from "../../../components/iconButton";
 import Typography from "../../../components/typography";
 import { colors, spacing, typography } from "../../../styles/theme";
-
-import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "../../../state/hooks/useAuth";
 
 const Header = () => {
   const { logout, user } = useAuth();

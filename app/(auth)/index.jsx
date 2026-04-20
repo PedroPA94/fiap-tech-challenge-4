@@ -6,7 +6,6 @@ import Button from "../../src/presentation/components/button";
 import Input from "../../src/presentation/components/input";
 import Logo from "../../src/presentation/components/logo";
 import Typography from "../../src/presentation/components/typography";
-import { useAuth } from "../../src/presentation/contexts/AuthContext";
 import { useForm } from "../../src/presentation/hooks/useForm";
 import { useValidators } from "../../src/presentation/hooks/useValidators";
 import {
@@ -16,6 +15,7 @@ import {
 } from "../../src/presentation/styles/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useAuth } from "../../src/presentation/state/hooks/useAuth";
 
 const Login = () => {
   const router = useRouter();
