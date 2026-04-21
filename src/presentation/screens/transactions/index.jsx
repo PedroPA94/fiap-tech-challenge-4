@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { FlatList, StyleSheet, View, ActivityIndicator } from "react-native";
 import Animated, { Easing, FadeInLeft } from "react-native-reanimated";
 import Typography from "../../components/typography";
@@ -20,26 +20,64 @@ const TransactionsScreen = () => {
     loadTransactions();
   }, []);
 
-  const filteredTransactions = transactions.filter((transaction) => {
-    if (selectedCategory && !transaction.matchesCategory(selectedCategory)) {
-      return false;
-    }
+  const formattedTransactions = useMemo(() => {
+    return transactions
+      .filter((transaction) => {
+        if (
+          selectedCategory &&
+          !transaction.matchesCategory(selectedCategory)
+        ) {
+          return false;
+        }
 
-    if (!transaction.matchesDate(selectedDate)) return false;
+        if (!transaction.matchesDate(selectedDate)) return false;
+        if (!transaction.matchesSearch(search)) return false;
 
-    if (!transaction.matchesSearch(search)) return false;
+        return true;
+      })
+      .map((t) => ({
+        ...t,
+        formattedDate: new Intl.DateTimeFormat("pt-BR").format(
+          new Date(t.date),
+        ),
+      }));
+  }, [transactions, selectedCategory, selectedDate, search]);
 
-    return true;
-  });
+  const editTransaction = useCallback(
+    (id) => {
+      router.push("(modals)/transaction?id=" + id);
+    },
+    [router],
+  );
 
-  const formattedTransactions = filteredTransactions.map((t) => ({
-    ...t,
-    formattedDate: new Intl.DateTimeFormat("pt-BR").format(new Date(t.date)),
-  }));
+  const renderItem = useCallback(
+    ({ item, index }) => {
+      return (
+        <AnimatedTransactionItem
+          item={item}
+          index={index}
+          editTransaction={editTransaction}
+        />
+      );
+    },
+    [editTransaction],
+  );
 
-  const editTransaction = (id) => {
-    router.push("(modals)/transaction?id=" + id);
-  };
+  const ListHeader = useMemo(
+    () => (
+      <View style={{ marginBottom: spacing.lg }}>
+        <TransactionsFilter
+          search={search}
+          onSearchChange={setSearch}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          selectedDate={selectedDate}
+          onDateChange={setSelectedDate}
+        />
+      </View>
+    ),
+    [search, selectedCategory, selectedDate],
+  );
 
   if (isLoading && transactions.length === 0) {
     return (
@@ -62,32 +100,19 @@ const TransactionsScreen = () => {
 
       <View style={styles.transactionsWrapper}>
         <FlatList
-          ListHeaderComponent={
-            <View style={{ marginBottom: spacing.lg }}>
-              <TransactionsFilter
-                search={search}
-                onSearchChange={setSearch}
-                selectedCategory={selectedCategory}
-                onCategoryChange={setSelectedCategory}
-                selectedDate={selectedDate}
-                onDateChange={setSelectedDate}
-              />
-            </View>
-          }
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={5}
+          removeClippedSubviews={true}
           data={formattedTransactions}
           keyExtractor={(item) => item.id}
-          renderItem={({ item, index }) => (
-            <AnimatedTransactionItem
-              item={item}
-              index={index}
-              editTransaction={editTransaction}
-            />
-          )}
-          ItemSeparatorComponent={<View style={{ height: spacing.md }} />}
+          renderItem={renderItem}
           contentContainerStyle={{
             paddingHorizontal: spacing.sm,
             paddingVertical: spacing.md,
           }}
+          ItemSeparatorComponent={() => <View style={{ height: spacing.md }} />}
+          ListHeaderComponent={ListHeader}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
               <Typography style={styles.emptyText}>
@@ -133,21 +158,25 @@ const styles = StyleSheet.create({
   },
 });
 
-const AnimatedTransactionItem = ({ item, index, editTransaction }) => {
-  return (
-    <Animated.View
-      collapsable={false}
-      entering={FadeInLeft.delay(index * 50)
-        .duration(320)
-        .easing(Easing.out(Easing.cubic))}
-    >
-      <TransactionItem
-        category={item.category}
-        value={item.value}
-        description={item.description}
-        date={item.formattedDate}
-        onPress={() => editTransaction(item.id)}
-      />
-    </Animated.View>
-  );
-};
+const AnimatedTransactionItem = React.memo(
+  ({ item, index, editTransaction }) => {
+    return (
+      <Animated.View
+        collapsable={false}
+        entering={FadeInLeft.delay(index * 50)
+          .duration(320)
+          .easing(Easing.out(Easing.cubic))}
+      >
+        <TransactionItem
+          category={item.category}
+          value={item.value}
+          description={item.description}
+          date={item.formattedDate}
+          onPress={() => editTransaction(item.id)}
+        />
+      </Animated.View>
+    );
+  },
+);
+
+AnimatedTransactionItem.displayName = "AnimatedTransactionItem";
