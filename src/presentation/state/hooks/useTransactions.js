@@ -5,23 +5,25 @@ import {
   updateTransaction,
 } from "../transactions/transactionsThunks";
 
-import { makeTransaction } from "../../../domain/entities/transaction";
+import {
+  selectTransactions,
+  selectTotalBalance,
+} from "../transactions/transactionsSelectors";
 
 export const useTransactions = () => {
   const dispatch = useDispatch();
-  const state = useSelector((state) => state.transactions);
 
-  const transactions = state.list.map(makeTransaction);
+  const transactions = useSelector(selectTransactions);
+  const totalBalance = useSelector(selectTotalBalance);
 
-  const getTransaction = (id) => transactions.find((t) => t.id === id);
-
-  const getTotalBalance = () =>
-    transactions.reduce((sum, t) => sum + t.value, 0);
+  const isLoading = useSelector((state) => state.transactions.isLoading);
+  const error = useSelector((state) => state.transactions.error);
 
   return {
     transactions,
-    isLoading: state.isLoading,
-    error: state.error,
+    totalBalance,
+    isLoading,
+    error,
 
     loadTransactions: () => dispatch(loadTransactions()).unwrap(),
 
@@ -29,8 +31,5 @@ export const useTransactions = () => {
 
     updateTransaction: (id, data) =>
       dispatch(updateTransaction({ id, transactionData: data })).unwrap(),
-
-    getTransaction,
-    getTotalBalance,
   };
 };
