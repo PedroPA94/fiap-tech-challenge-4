@@ -4,6 +4,7 @@ import InfoTile from "../../../components/infoTile";
 import Typography from "../../../components/typography";
 import { colors, spacing, typography } from "../../../styles/theme";
 import { useTransactions } from "../../../state/hooks/useTransactions";
+import { formatCurrency } from "../../../utils/currencyFormatter";
 
 const Balance = () => {
   const { transactions } = useTransactions();
@@ -19,16 +20,6 @@ const Balance = () => {
   const totalExpenses = transactions
     .filter((t) => t.isExpense())
     .reduce((sum, t) => sum + t.getAbsoluteValue(), 0);
-
-  const formatCurrency = (value) => {
-    return (
-      "R$ " +
-      new Intl.NumberFormat("pt-BR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(value)
-    );
-  };
 
   return (
     <Card kind="primary" style={styles.container}>

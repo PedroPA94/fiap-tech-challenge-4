@@ -4,25 +4,22 @@ import InfoTile from "../../../components/infoTile";
 import Typography from "../../../components/typography";
 import { categories, colors, spacing, typography } from "../../../styles/theme";
 import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { formatCurrency } from "../../../utils/currencyFormatter";
 
 const TransactionItem = ({ value, date, description, category, onPress }) => {
   const categoryData = categories[category] ?? categories.other;
 
+  const formattedValue = formatCurrency(value);
+
   const isNegative = value < 0;
-
-  const formattedValue = new Intl.NumberFormat("pt-BR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(Math.abs(value));
-
-  const displayValue = isNegative
-    ? `- R$ ${formattedValue}`
-    : `R$ ${formattedValue}`;
-
   const valueColor = isNegative ? colors.danger : colors.success;
+  const valueStyle = {
+    color: valueColor,
+  };
 
   return (
-    <Card style={styles.container}>
+    <Card style={styles.container} onPress={onPress}>
       <InfoTile
         value={description}
         tone="light"
@@ -33,30 +30,23 @@ const TransactionItem = ({ value, date, description, category, onPress }) => {
       <View style={styles.inner}>
         <Typography style={styles.date}>{date}</Typography>
 
-        <Typography weight="bold" style={{ color: valueColor }}>
-          {displayValue}
+        <Typography weight="bold" style={valueStyle}>
+          {formattedValue}
         </Typography>
       </View>
 
-      <Ionicons
-        name="chevron-forward"
-        size={20}
-        color="grey"
-        style={styles.chevron}
-        onPress={onPress}
-      />
+      <Ionicons name="chevron-forward" size={20} color="grey" />
     </Card>
   );
 };
 
-export default TransactionItem;
+export default React.memo(TransactionItem);
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    position: "relative",
   },
   inner: {
     alignItems: "flex-end",
@@ -65,9 +55,5 @@ const styles = StyleSheet.create({
   date: {
     color: colors.textSecondary,
     fontSize: typography.size.xs,
-  },
-  chevron: {
-    position: "absolute",
-    right: 6,
   },
 });
