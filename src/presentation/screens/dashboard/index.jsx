@@ -14,16 +14,19 @@ import { useEffect } from "react";
 import ExpenseByCategoryChart from "./components/charts/expenseByCategoryChart";
 import CashFlowChart from "./components/charts/cashFlowChart";
 import { useTransactions } from "../../state/hooks/useTransactions";
+import { useSummary } from "../../state/hooks/useSummary";
 
 const DashboardScreen = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { loadTransactions, transactions } = useTransactions();
+  const { loadSummary } = useSummary();
 
   useEffect(() => {
     const loadData = async () => {
       try {
         await loadTransactions();
+        await loadSummary();
       } catch (err) {
         console.error("Erro ao carregar transações:", err);
       }

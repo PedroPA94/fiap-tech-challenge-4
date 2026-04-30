@@ -1,55 +1,55 @@
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import Card from "../../../components/card";
 import InfoTile from "../../../components/infoTile";
 import Typography from "../../../components/typography";
 import { colors, spacing, typography } from "../../../styles/theme";
-import { useTransactions } from "../../../state/hooks/useTransactions";
 import { formatCurrency } from "../../../utils/currencyFormatter";
+import { useSummary } from "../../../state/hooks/useSummary";
 
 const Balance = () => {
-  const { transactions } = useTransactions();
-
-  const totalBalance = transactions.reduce((sum, t) => {
-    return sum + t.value;
-  }, 0);
-
-  const totalIncome = transactions
-    .filter((t) => t.isIncome())
-    .reduce((sum, t) => sum + t.value, 0);
-
-  const totalExpenses = transactions
-    .filter((t) => t.isExpense())
-    .reduce((sum, t) => sum + t.getAbsoluteValue(), 0);
+  const { summary, isLoading } = useSummary();
 
   return (
     <Card kind="primary" style={styles.container}>
-      <View style={styles.balanceWrapper}>
-        <Typography style={styles.balanceLabel}>Saldo total</Typography>
-        <Typography weight="bold" style={styles.balanceValue}>
-          {formatCurrency(totalBalance)}
-        </Typography>
-      </View>
-      <View style={styles.infoWrapper}>
-        <InfoTile
-          value={formatCurrency(totalIncome)}
-          category={{
-            icon: "arrow-down-circle-outline",
-            label: "Receitas",
-            baseColor: colors.white,
-            softColor: colors.primarySoft,
-          }}
-        />
+      {isLoading ||
+        (!summary && (
+          <View style={{ paddingVertical: spacing.lg }}>
+            <ActivityIndicator size="large" color={colors.white} />
+          </View>
+        ))}
 
-        <InfoTile
-          value={formatCurrency(totalExpenses)}
-          category={{
-            icon: "arrow-up-circle-outline",
-            label: "Despesas",
-            baseColor: colors.white,
-            softColor: colors.primarySoft,
-          }}
-        />
-      </View>
+      {!isLoading && summary && (
+        <>
+          <View style={styles.balanceWrapper}>
+            <Typography style={styles.balanceLabel}>Saldo total</Typography>
+
+            <Typography weight="bold" style={styles.balanceValue}>
+              {formatCurrency(summary.balance)}
+            </Typography>
+          </View>
+          <View style={styles.infoWrapper}>
+            <InfoTile
+              value={formatCurrency(summary.totalIncome)}
+              category={{
+                icon: "arrow-down-circle-outline",
+                label: "Receitas",
+                baseColor: colors.white,
+                softColor: colors.primarySoft,
+              }}
+            />
+
+            <InfoTile
+              value={formatCurrency(summary.totalExpenses)}
+              category={{
+                icon: "arrow-up-circle-outline",
+                label: "Despesas",
+                baseColor: colors.white,
+                softColor: colors.primarySoft,
+              }}
+            />
+          </View>
+        </>
+      )}
     </Card>
   );
 };

@@ -9,8 +9,3 @@ export const selectTransactions = createSelector(
     return transactions.map(makeTransaction);
   },
 );
-
-export const selectTotalBalance = createSelector(
-  [selectTransactions],
-  (transactions) => transactions.reduce((sum, t) => sum + t.value, 0),
-);

@@ -62,16 +62,12 @@ export const firebaseSummaryRepository = {
     });
   },
 
-  async getSummary(userId) {
+  async getByUserId(userId) {
     const ref = doc(db, COLLECTION, userId);
     const snap = await getDoc(ref);
 
     if (!snap.exists()) {
-      return {
-        totalIncome: 0,
-        totalExpenses: 0,
-        balance: 0,
-      };
+      return null;
     }
 
     return snap.data();

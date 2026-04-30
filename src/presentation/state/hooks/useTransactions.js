@@ -5,23 +5,18 @@ import {
   updateTransaction,
 } from "../transactions/transactionsThunks";
 
-import {
-  selectTransactions,
-  selectTotalBalance,
-} from "../transactions/transactionsSelectors";
+import { selectTransactions } from "../transactions/transactionsSelectors";
 
 export const useTransactions = () => {
   const dispatch = useDispatch();
 
   const transactions = useSelector(selectTransactions);
-  const totalBalance = useSelector(selectTotalBalance);
 
   const isLoading = useSelector((state) => state.transactions.isLoading);
   const error = useSelector((state) => state.transactions.error);
 
   return {
     transactions,
-    totalBalance,
     isLoading,
     error,
 
