@@ -26,7 +26,6 @@ const DashboardScreen = () => {
     const loadData = async () => {
       try {
         await loadTransactions();
-        await loadSummary();
       } catch (err) {
         console.error("Erro ao carregar transações:", err);
       }
@@ -35,6 +34,19 @@ const DashboardScreen = () => {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        await loadSummary();
+      } catch (err) {
+        console.error("Erro ao carregar summary:", err);
+      }
+    };
+
+    loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactions]);
 
   const addTransaction = () => {
     router.push("/(modals)/transaction");
