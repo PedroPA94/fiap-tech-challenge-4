@@ -43,15 +43,28 @@ export const firebaseTransactionRepository = {
     };
   },
 
-  createTransaction: async (transactionData) => {
-    const docRef = await addDoc(collection(db, COLLECTION_NAME), {
-      ...transactionData,
-    });
+  createTransaction: async (transactionData, context = null) => {
+    const ref = collection(db, COLLECTION_NAME);
 
+    if (context) {
+      const docRef = doc(ref);
+      context.set(docRef, transactionData);
+      return docRef.id;
+    }
+
+    const docRef = await addDoc(ref, transactionData);
     return docRef.id;
   },
 
-  updateTransaction: async (id, transactionData) => {
+  updateTransaction: async (id, transactionData, context = null) => {
+    const ref = collection(db, COLLECTION_NAME);
+
+    if (context) {
+      const docRef = doc(ref, id);
+      context.update(docRef, transactionData);
+      return;
+    }
+
     const docRef = doc(db, COLLECTION_NAME, id);
 
     await updateDoc(docRef, {

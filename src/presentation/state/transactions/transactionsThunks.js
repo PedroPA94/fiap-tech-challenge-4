@@ -9,6 +9,8 @@ import {
   getUserTransactions as getUserTransactionsUC,
   updateTransaction as updateTransactionUC,
 } from "../../../application/usecases/transaction";
+import { firebaseSummaryRepository } from "../../../infrastructure/repositories/firebaseSummaryRepository";
+import { firebaseTransactionManager } from "../../../infrastructure/transactional/firebaseTransactionManager";
 
 export const loadTransactions = createAsyncThunk(
   "transactions/load",
@@ -38,6 +40,8 @@ export const addTransaction = createAsyncThunk(
 
       const transaction = await createTransactionUC(
         firebaseTransactionRepository,
+        firebaseSummaryRepository,
+        firebaseTransactionManager,
         firebaseReceiptService,
         user.uid,
         data,
@@ -61,6 +65,8 @@ export const updateTransaction = createAsyncThunk(
 
       const transaction = await updateTransactionUC(
         firebaseTransactionRepository,
+        firebaseSummaryRepository,
+        firebaseTransactionManager,
         firebaseReceiptService,
         user.uid,
         id,

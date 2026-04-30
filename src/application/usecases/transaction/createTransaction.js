@@ -1,37 +1,48 @@
 import { makeTransaction } from "../../../domain/entities/transaction";
 
 export const createTransaction = async (
-  repository,
+  transactionRepository,
+  summaryRepository,
+  transactionManager,
   receiptService,
   userId,
   transactionData,
   receipt,
 ) => {
-  const transaction = makeTransaction({
-    ...transactionData,
-    userId,
-    hasReceipt: !!receipt,
+  return await transactionManager.run(async (context) => {
+    const transaction = makeTransaction({
+      ...transactionData,
+      userId,
+      hasReceipt: !!receipt,
+    });
+
+    const transactionDataToPersist = {
+      userId: transaction.userId,
+      description: transaction.description,
+      value: transaction.value,
+      type: transaction.type,
+      category: transaction.category,
+      hasReceipt: transaction.hasReceipt,
+      date: transaction.date.toISOString(),
+    };
+
+    const newTransactionId = await transactionRepository.createTransaction(
+      {
+        ...transactionDataToPersist,
+      },
+      context,
+    );
+
+    await summaryRepository.applyTransactionCreation(
+      userId,
+      transaction.value,
+      context,
+    );
+
+    if (receipt) {
+      await receiptService.attachToTransaction(newTransactionId, receipt);
+    }
+
+    return transaction.updateId(newTransactionId);
   });
-
-  const transactionDataToPersist = {
-    userId: transaction.userId,
-    description: transaction.description,
-    value: transaction.value,
-    type: transaction.type,
-    category: transaction.category,
-    hasReceipt: transaction.hasReceipt,
-    date: transaction.date.toISOString(),
-  };
-
-  const newTransactionId = await repository.createTransaction({
-    ...transactionDataToPersist,
-  });
-
-  const newTransaction = transaction.updateId(newTransactionId);
-
-  if (receipt) {
-    await receiptService.attachToTransaction(newTransactionId, receipt);
-  }
-
-  return newTransaction;
 };
