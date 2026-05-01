@@ -11,12 +11,11 @@ const Balance = () => {
 
   return (
     <Card kind="primary" style={styles.container}>
-      {isLoading ||
-        (!summary && (
-          <View style={{ paddingVertical: spacing.lg }}>
-            <ActivityIndicator size="large" color={colors.white} />
-          </View>
-        ))}
+      {isLoading && (
+        <View style={{ paddingVertical: spacing.lg }}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </View>
+      )}
 
       {!isLoading && summary && (
         <>

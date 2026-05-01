@@ -5,6 +5,7 @@ import Card from "../../../../components/card";
 import Typography from "../../../../components/typography";
 import { colors, spacing } from "../../../../styles/theme";
 import { useAnalytics } from "../../../../state/hooks/useAnalytics";
+import { ActivityIndicator } from "react-native-web";
 
 const INCOME_COLOR = colors.success;
 const EXPENSE_COLOR = colors.danger;
@@ -65,12 +66,14 @@ const CashFlowChart = () => {
   if (isLoading) {
     return (
       <Card>
-        <Typography>Carregando...</Typography>
+        <View style={{ paddingVertical: spacing.lg }}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
       </Card>
     );
   }
 
-  if (barData.length === 0) {
+  if (!isLoading && barData.length === 0) {
     return (
       <Card>
         <Typography weight="bold" style={styles.title}>

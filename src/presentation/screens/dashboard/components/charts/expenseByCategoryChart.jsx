@@ -5,6 +5,7 @@ import Card from "../../../../components/card";
 import Typography from "../../../../components/typography";
 import { colors, spacing, radius, categories } from "../../../../styles/theme";
 import { useAnalytics } from "../../../../state/hooks/useAnalytics";
+import { ActivityIndicator } from "react-native-web";
 
 const ExpenseByCategoryChart = () => {
   const { analytics, isLoading } = useAnalytics();
@@ -66,7 +67,9 @@ const ExpenseByCategoryChart = () => {
   if (isLoading) {
     return (
       <Card>
-        <Typography>Carregando...</Typography>
+        <View style={{ paddingVertical: spacing.lg }}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
       </Card>
     );
   }
