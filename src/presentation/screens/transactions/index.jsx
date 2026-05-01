@@ -27,7 +27,7 @@ const TransactionsScreen = () => {
 
   useEffect(() => {
     loadTransactions();
-  }, []);
+  }, [loadTransactions]);
 
   const formattedTransactions = useMemo(() => {
     return transactions
@@ -60,11 +60,10 @@ const TransactionsScreen = () => {
   );
 
   const renderItem = useCallback(
-    ({ item, index }) => {
+    ({ item }) => {
       return (
         <AnimatedTransactionItem
           item={item}
-          index={index}
           editTransaction={editTransaction}
         />
       );
@@ -140,6 +139,8 @@ const TransactionsScreen = () => {
               <ActivityIndicator style={{ marginVertical: spacing.md }} />
             ) : null
           }
+          refreshing={isLoading}
+          onRefresh={() => loadTransactions()}
         />
       </View>
     </SafeAreaView>
@@ -178,25 +179,18 @@ const styles = StyleSheet.create({
   },
 });
 
-const AnimatedTransactionItem = React.memo(
-  ({ item, index, editTransaction }) => {
-    return (
-      <Animated.View
-        collapsable={false}
-        entering={FadeInLeft.delay(index * 50)
-          .duration(320)
-          .easing(Easing.out(Easing.cubic))}
-      >
-        <TransactionItem
-          category={item.category}
-          value={item.value}
-          description={item.description}
-          date={item.date}
-          onPress={() => editTransaction(item.id)}
-        />
-      </Animated.View>
-    );
-  },
-);
+const AnimatedTransactionItem = React.memo(({ item, editTransaction }) => {
+  return (
+    <Animated.View collapsable={false} entering={FadeInLeft.duration(250)}>
+      <TransactionItem
+        category={item.category}
+        value={item.value}
+        description={item.description}
+        date={item.date}
+        onPress={() => editTransaction(item.id)}
+      />
+    </Animated.View>
+  );
+});
 
 AnimatedTransactionItem.displayName = "AnimatedTransactionItem";
