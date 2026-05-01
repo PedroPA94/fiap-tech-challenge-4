@@ -8,7 +8,10 @@ import {
 const initialState = {
   list: [],
   isLoading: false,
+  isLoadingMore: false, // 👈 novo
   error: null,
+  cursor: null, // 👈 novo
+  hasMore: true, // 👈 novo
 };
 
 const sortByDateDesc = (t) =>
@@ -21,16 +24,35 @@ const transactionsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // LOAD
-      .addCase(loadTransactions.pending, (state) => {
-        state.isLoading = true;
+      .addCase(loadTransactions.pending, (state, action) => {
+        if (action.meta.arg?.loadMore) {
+          state.isLoadingMore = true;
+        } else {
+          state.isLoading = true;
+          state.list = [];
+          state.cursor = null;
+          state.hasMore = true;
+        }
         state.error = null;
       })
       .addCase(loadTransactions.fulfilled, (state, action) => {
+        const { data, nextCursor, loadMore } = action.payload;
+
         state.isLoading = false;
-        state.list = sortByDateDesc(action.payload);
+        state.isLoadingMore = false;
+
+        if (loadMore) {
+          state.list = [...state.list, ...data];
+        } else {
+          state.list = data;
+        }
+
+        state.cursor = nextCursor;
+        state.hasMore = data.length > 0;
       })
       .addCase(loadTransactions.rejected, (state, action) => {
         state.isLoading = false;
+        state.isLoadingMore = false;
         state.error = action.payload;
       })
 
@@ -41,7 +63,7 @@ const transactionsSlice = createSlice({
       })
       .addCase(addTransaction.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.list = sortByDateDesc([...state.list, action.payload]);
+        state.list = [action.payload, ...state.list];
       })
       .addCase(addTransaction.rejected, (state, action) => {
         state.isLoading = false;
@@ -56,10 +78,8 @@ const transactionsSlice = createSlice({
       .addCase(updateTransaction.fulfilled, (state, action) => {
         state.isLoading = false;
 
-        state.list = sortByDateDesc(
-          state.list.map((t) =>
-            t.id === action.payload.id ? action.payload : t,
-          ),
+        state.list = state.list.map((t) =>
+          t.id === action.payload.id ? action.payload : t,
         );
       })
       .addCase(updateTransaction.rejected, (state, action) => {

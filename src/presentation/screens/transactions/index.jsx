@@ -11,7 +11,16 @@ import { useTransactions } from "../../state/hooks/useTransactions";
 
 const TransactionsScreen = () => {
   const router = useRouter();
-  const { transactions, isLoading, loadTransactions } = useTransactions();
+
+  const {
+    transactions,
+    isLoading,
+    isLoadingMore,
+    hasMore,
+    loadTransactions,
+    loadMore,
+  } = useTransactions();
+
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -120,6 +129,17 @@ const TransactionsScreen = () => {
               </Typography>
             </View>
           }
+          onEndReached={() => {
+            if (!isLoadingMore && hasMore) {
+              loadMore();
+            }
+          }}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            isLoadingMore ? (
+              <ActivityIndicator style={{ marginVertical: spacing.md }} />
+            ) : null
+          }
         />
       </View>
     </SafeAreaView>
@@ -171,7 +191,7 @@ const AnimatedTransactionItem = React.memo(
           category={item.category}
           value={item.value}
           description={item.description}
-          date={item.formattedDate}
+          date={item.date}
           onPress={() => editTransaction(item.id)}
         />
       </Animated.View>

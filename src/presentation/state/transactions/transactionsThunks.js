@@ -17,16 +17,30 @@ import { loadAnalytics } from "../analytics/analyticsThunks";
 
 export const loadTransactions = createAsyncThunk(
   "transactions/load",
-  async (_, { rejectWithValue }) => {
+  async ({ loadMore = false } = {}, { getState, rejectWithValue }) => {
     try {
       const user = getCurrentUserUC(firebaseAuthRepository);
 
-      const data = await getUserTransactionsUC(
+      const { cursor, hasMore } = getState().transactions;
+
+      if (loadMore && !hasMore) {
+        return { data: [], nextCursor: null, loadMore };
+      }
+
+      const result = await getUserTransactionsUC(
         firebaseTransactionRepository,
         user.uid,
+        {
+          limit: 10,
+          cursor: loadMore ? cursor : null,
+        },
       );
 
-      return data.map((t) => t.toJSON());
+      return {
+        data: result.transactions.map((t) => t.toJSON()),
+        nextCursor: result.nextCursor,
+        loadMore,
+      };
     } catch (err) {
       return rejectWithValue(err.message);
     }

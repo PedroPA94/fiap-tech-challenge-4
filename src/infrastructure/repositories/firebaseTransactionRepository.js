@@ -4,7 +4,10 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
+  orderBy,
   query,
+  startAfter,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -13,18 +16,34 @@ import { db } from "../config/firebase";
 const COLLECTION_NAME = "transactions";
 
 export const firebaseTransactionRepository = {
-  getByUserId: async (userId) => {
-    const q = query(
+  getByUserId: async (userId, { limit: pageSize, cursor }) => {
+    let q = query(
       collection(db, COLLECTION_NAME),
       where("userId", "==", userId),
+      orderBy("date", "desc"),
+      limit(pageSize),
     );
+
+    if (cursor) {
+      q = query(
+        collection(db, COLLECTION_NAME),
+        where("userId", "==", userId),
+        orderBy("date", "desc"),
+        startAfter(cursor),
+        limit(pageSize),
+      );
+    }
 
     const snapshot = await getDocs(q);
 
-    return snapshot.docs.map((doc) => ({
+    const data = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
+
+    const lastDoc = snapshot.docs[snapshot.docs.length - 1];
+
+    return { data, nextCursor: lastDoc || null };
   },
 
   getById: async (id) => {
