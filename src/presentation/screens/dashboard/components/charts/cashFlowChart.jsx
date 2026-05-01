@@ -3,37 +3,44 @@ import { useMemo } from "react";
 import { BarChart } from "react-native-gifted-charts";
 import Card from "../../../../components/card";
 import Typography from "../../../../components/typography";
-import { transformCashFlowData } from "../../../../utils/chartDataTransformers";
 import { colors, spacing } from "../../../../styles/theme";
+import { useAnalytics } from "../../../../state/hooks/useAnalytics";
 
 const INCOME_COLOR = colors.success;
 const EXPENSE_COLOR = colors.danger;
 
-const CashFlowChart = ({ transactions = [] }) => {
+const CashFlowChart = () => {
+  const { analytics, isLoading } = useAnalytics();
+
   const chartData = useMemo(() => {
-    const data = transformCashFlowData(transactions);
-    return data;
-  }, [transactions]);
+    if (!analytics?.monthlyCashFlow) return [];
+
+    return Object.entries(analytics.monthlyCashFlow)
+      .map(([monthKey, data]) => {
+        const date = new Date(`${monthKey}-01`);
+
+        return {
+          label: date.toLocaleDateString("pt-BR", { month: "short" }),
+          income: data.income || 0,
+          expense: data.expense || 0,
+        };
+      })
+      .sort((a, b) => new Date(a.monthKey) - new Date(b.monthKey));
+  }, [analytics]);
 
   const barData = useMemo(() => {
-    if (chartData.length === 0) {
-      return [];
-    }
-
-    const formattedData = chartData.flatMap((item) => [
+    return chartData.flatMap((item) => [
       {
-        value: item.income || 0,
+        value: item.income,
         frontColor: INCOME_COLOR,
         label: item.label,
         spacing: 4,
       },
       {
-        value: item.expense || 0,
+        value: item.expense,
         frontColor: EXPENSE_COLOR,
       },
     ]);
-
-    return formattedData;
   }, [chartData]);
 
   const renderLegend = () => {
@@ -55,7 +62,15 @@ const CashFlowChart = ({ transactions = [] }) => {
     );
   };
 
-  if (chartData.length === 0 || barData.length === 0) {
+  if (isLoading) {
+    return (
+      <Card>
+        <Typography>Carregando...</Typography>
+      </Card>
+    );
+  }
+
+  if (barData.length === 0) {
     return (
       <Card>
         <Typography weight="bold" style={styles.title}>

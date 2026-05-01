@@ -13,22 +13,22 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect } from "react";
 import ExpenseByCategoryChart from "./components/charts/expenseByCategoryChart";
 import CashFlowChart from "./components/charts/cashFlowChart";
-import { useTransactions } from "../../state/hooks/useTransactions";
 import { useSummary } from "../../state/hooks/useSummary";
+import { useAnalytics } from "../../state/hooks/useAnalytics";
 
 const DashboardScreen = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { loadTransactions, transactions } = useTransactions();
   const { loadSummary } = useSummary();
+  const { loadAnalytics } = useAnalytics();
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        await loadTransactions();
         await loadSummary();
+        await loadAnalytics();
       } catch (err) {
-        console.error("Erro ao carregar transações:", err);
+        console.error("Erro ao carregar dados para o Dashboard:", err);
       }
     };
 
@@ -60,14 +60,14 @@ const DashboardScreen = () => {
           entering={FadeInDown.delay(600).duration(350).springify()}
           style={styles.chartsContainer}
         >
-          <ExpenseByCategoryChart transactions={transactions} />
+          <ExpenseByCategoryChart />
         </Animated.View>
 
         <Animated.View
           entering={FadeInDown.delay(400).duration(350).springify()}
           style={styles.chartsContainer}
         >
-          <CashFlowChart transactions={transactions} />
+          <CashFlowChart />
         </Animated.View>
       </ScrollView>
 

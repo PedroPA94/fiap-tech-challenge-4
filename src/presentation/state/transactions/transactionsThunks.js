@@ -12,6 +12,8 @@ import {
 import { firebaseSummaryRepository } from "../../../infrastructure/repositories/firebaseSummaryRepository";
 import { firebaseTransactionManager } from "../../../infrastructure/transactional/firebaseTransactionManager";
 import { loadSummary } from "../summary/summaryThunks";
+import { firebaseAnalyticsRepository } from "../../../infrastructure/repositories/firebaseAnalyticsRepository";
+import { loadAnalytics } from "../analytics/analyticsThunks";
 
 export const loadTransactions = createAsyncThunk(
   "transactions/load",
@@ -42,6 +44,7 @@ export const addTransaction = createAsyncThunk(
       const transaction = await createTransactionUC(
         firebaseTransactionRepository,
         firebaseSummaryRepository,
+        firebaseAnalyticsRepository,
         firebaseTransactionManager,
         firebaseReceiptService,
         user.uid,
@@ -50,6 +53,7 @@ export const addTransaction = createAsyncThunk(
       );
 
       dispatch(loadSummary());
+      dispatch(loadAnalytics());
 
       return transaction.toJSON();
     } catch (err) {
@@ -69,6 +73,7 @@ export const updateTransaction = createAsyncThunk(
       const transaction = await updateTransactionUC(
         firebaseTransactionRepository,
         firebaseSummaryRepository,
+        firebaseAnalyticsRepository,
         firebaseTransactionManager,
         firebaseReceiptService,
         user.uid,

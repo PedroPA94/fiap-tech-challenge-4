@@ -3,14 +3,35 @@ import { useMemo } from "react";
 import { PieChart } from "react-native-gifted-charts";
 import Card from "../../../../components/card";
 import Typography from "../../../../components/typography";
-import { transformExpensesByCategoryData } from "../../../../utils/chartDataTransformers";
-import { colors, spacing, radius } from "../../../../styles/theme";
+import { colors, spacing, radius, categories } from "../../../../styles/theme";
+import { useAnalytics } from "../../../../state/hooks/useAnalytics";
 
-const ExpenseByCategoryChart = ({ transactions = [] }) => {
+const ExpenseByCategoryChart = () => {
+  const { analytics, isLoading } = useAnalytics();
+
   const chartData = useMemo(() => {
-    const data = transformExpensesByCategoryData(transactions);
-    return data;
-  }, [transactions]);
+    if (!analytics?.expensesByCategory) return [];
+
+    const entries = Object.entries(analytics.expensesByCategory);
+
+    const total = entries.reduce((sum, [, value]) => sum + value, 0);
+
+    return entries
+      .map(([categoryKey, value]) => {
+        const category = categories[categoryKey] || categories.other;
+        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+
+        return {
+          value,
+          percentage,
+          text: `${percentage}%`,
+          color: category.baseColor,
+          label: category.label,
+          categoryKey,
+        };
+      })
+      .sort((a, b) => b.value - a.value);
+  }, [analytics]);
 
   const renderLegend = () => {
     if (chartData.length === 0) {
@@ -41,6 +62,14 @@ const ExpenseByCategoryChart = ({ transactions = [] }) => {
       </View>
     );
   };
+
+  if (isLoading) {
+    return (
+      <Card>
+        <Typography>Carregando...</Typography>
+      </Card>
+    );
+  }
 
   if (chartData.length === 0) {
     return (
