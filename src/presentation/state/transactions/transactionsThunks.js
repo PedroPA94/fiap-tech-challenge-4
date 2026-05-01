@@ -11,6 +11,8 @@ import {
 } from "../../../application/usecases/transaction";
 import { firebaseSummaryRepository } from "../../../infrastructure/repositories/firebaseSummaryRepository";
 import { firebaseTransactionManager } from "../../../infrastructure/transactional/firebaseTransactionManager";
+import { useDispatch } from "react-redux";
+import { loadSummary } from "../summary/summaryThunks";
 
 export const loadTransactions = createAsyncThunk(
   "transactions/load",
@@ -32,7 +34,7 @@ export const loadTransactions = createAsyncThunk(
 
 export const addTransaction = createAsyncThunk(
   "transactions/add",
-  async (transactionData, { rejectWithValue }) => {
+  async (transactionData, { dispatch, rejectWithValue }) => {
     try {
       const { receipt, ...data } = transactionData;
 
@@ -48,6 +50,8 @@ export const addTransaction = createAsyncThunk(
         receipt,
       );
 
+      dispatch(loadSummary());
+
       return transaction.toJSON();
     } catch (err) {
       return rejectWithValue(err.message);
@@ -57,7 +61,7 @@ export const addTransaction = createAsyncThunk(
 
 export const updateTransaction = createAsyncThunk(
   "transactions/update",
-  async ({ id, transactionData }, { rejectWithValue }) => {
+  async ({ id, transactionData }, { dispatch, rejectWithValue }) => {
     try {
       const { receipt, ...data } = transactionData;
 
@@ -73,6 +77,8 @@ export const updateTransaction = createAsyncThunk(
         data,
         receipt,
       );
+
+      dispatch(loadSummary());
 
       return transaction.toJSON();
     } catch (err) {
