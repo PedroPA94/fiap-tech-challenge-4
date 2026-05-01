@@ -19,6 +19,7 @@ const TransactionsScreen = () => {
     hasMore,
     loadTransactions,
     loadMore,
+    setFilters,
   } = useTransactions();
 
   const [search, setSearch] = useState("");
@@ -29,28 +30,25 @@ const TransactionsScreen = () => {
     loadTransactions();
   }, [loadTransactions]);
 
+  useEffect(() => {
+    setFilters({
+      category: selectedCategory,
+      date: selectedDate,
+    });
+
+    loadTransactions();
+  }, [selectedCategory, selectedDate]);
+
   const formattedTransactions = useMemo(() => {
     return transactions
-      .filter((transaction) => {
-        if (
-          selectedCategory &&
-          !transaction.matchesCategory(selectedCategory)
-        ) {
-          return false;
-        }
-
-        if (!transaction.matchesDate(selectedDate)) return false;
-        if (!transaction.matchesSearch(search)) return false;
-
-        return true;
-      })
+      .filter((transaction) => transaction.matchesSearch(search))
       .map((t) => ({
         ...t,
         formattedDate: new Intl.DateTimeFormat("pt-BR").format(
           new Date(t.date),
         ),
       }));
-  }, [transactions, selectedCategory, selectedDate, search]);
+  }, [transactions, search]);
 
   const editTransaction = useCallback(
     (id) => {

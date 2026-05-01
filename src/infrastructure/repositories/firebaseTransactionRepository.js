@@ -16,23 +16,22 @@ import { db } from "../config/firebase";
 const COLLECTION_NAME = "transactions";
 
 export const firebaseTransactionRepository = {
-  getByUserId: async (userId, { limit: pageSize, cursor }) => {
-    let q = query(
-      collection(db, COLLECTION_NAME),
+  getByUserId: async (userId, filters, { limit: pageSize, cursor }) => {
+    const q = query(
+      collection(db, "transactions"),
       where("userId", "==", userId),
+
+      // categoria
+      ...(filters.category ? [where("category", "==", filters.category)] : []),
+
+      // intervalo de datas
+      ...(filters.startDate ? [where("date", ">=", filters.startDate)] : []),
+      ...(filters.endDate ? [where("date", "<=", filters.endDate)] : []),
+
       orderBy("date", "desc"),
       limit(pageSize),
+      ...(cursor ? [startAfter(cursor)] : []),
     );
-
-    if (cursor) {
-      q = query(
-        collection(db, COLLECTION_NAME),
-        where("userId", "==", userId),
-        orderBy("date", "desc"),
-        startAfter(cursor),
-        limit(pageSize),
-      );
-    }
 
     const snapshot = await getDocs(q);
 

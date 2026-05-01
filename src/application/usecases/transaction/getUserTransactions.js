@@ -3,9 +3,10 @@ import { makeTransaction } from "../../../domain/entities/transaction";
 export const getUserTransactions = async (
   repository,
   userId,
+  filters,
   { limit = 10, cursor = null },
 ) => {
-  const { data, nextCursor } = await repository.getByUserId(userId, {
+  const { data, nextCursor } = await repository.getByUserId(userId, filters, {
     limit,
     cursor,
   });

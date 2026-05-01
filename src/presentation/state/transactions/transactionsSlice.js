@@ -8,19 +8,28 @@ import {
 const initialState = {
   list: [],
   isLoading: false,
-  isLoadingMore: false, // 👈 novo
-  error: null,
-  cursor: null, // 👈 novo
-  hasMore: true, // 👈 novo
+  isLoadingMore: false,
+  cursor: null,
+  hasMore: true,
+  filters: {
+    category: null,
+    date: null,
+  },
 };
-
-const sortByDateDesc = (t) =>
-  [...t].sort((a, b) => new Date(b.date) - new Date(a.date));
 
 const transactionsSlice = createSlice({
   name: "transactions",
   initialState,
-  reducers: {},
+  reducers: {
+    setFilters: (state, action) => {
+      state.filters = action.payload;
+
+      // reset paginação
+      state.cursor = null;
+      state.hasMore = true;
+      state.list = [];
+    },
+  },
   extraReducers: (builder) => {
     builder
       // LOAD
@@ -90,3 +99,4 @@ const transactionsSlice = createSlice({
 });
 
 export default transactionsSlice.reducer;
+export const { setFilters } = transactionsSlice.actions;

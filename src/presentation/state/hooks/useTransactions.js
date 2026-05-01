@@ -6,6 +6,7 @@ import {
 } from "../transactions/transactionsThunks";
 
 import { selectTransactions } from "../transactions/transactionsSelectors";
+import { setFilters } from "../transactions/transactionsSlice";
 
 export const useTransactions = () => {
   const dispatch = useDispatch();
@@ -34,5 +35,9 @@ export const useTransactions = () => {
 
     updateTransaction: (id, data) =>
       dispatch(updateTransaction({ id, transactionData: data })).unwrap(),
+
+    setFilters: (filters) => {
+      dispatch(setFilters(filters));
+    },
   };
 };

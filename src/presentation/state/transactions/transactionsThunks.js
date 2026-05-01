@@ -21,7 +21,7 @@ export const loadTransactions = createAsyncThunk(
     try {
       const user = getCurrentUserUC(firebaseAuthRepository);
 
-      const { cursor, hasMore } = getState().transactions;
+      const { cursor, hasMore, filters } = getState().transactions;
 
       if (loadMore && !hasMore) {
         return { data: [], nextCursor: null, loadMore };
@@ -30,6 +30,7 @@ export const loadTransactions = createAsyncThunk(
       const result = await getUserTransactionsUC(
         firebaseTransactionRepository,
         user.uid,
+        filters,
         {
           limit: 10,
           cursor: loadMore ? cursor : null,
