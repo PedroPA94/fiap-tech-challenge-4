@@ -36,11 +36,11 @@ export const firebaseAnalyticsRepository = {
     }
 
     if (context) {
-      context.set(ref, updates, { merge: true });
+      context.update(ref, updates);
       return;
     }
 
-    await setDoc(ref, updates, { merge: true });
+    await updateDoc(ref, updates);
   },
 
   async applyTransactionUpdate(
@@ -101,6 +101,15 @@ export const firebaseAnalyticsRepository = {
     const snap = await getDoc(ref);
 
     if (!snap.exists()) {
+      await setDoc(
+        ref,
+        {
+          monthlyCashFlow: {},
+          expensesByCategory: {},
+          updatedAt: new Date().toISOString(),
+        },
+        { merge: true },
+      );
       return null;
     }
 
