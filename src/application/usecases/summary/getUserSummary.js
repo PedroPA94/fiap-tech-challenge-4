@@ -7,8 +7,6 @@ export const getUserSummary = async (summaryRepository, userId) => {
 
   const data = await summaryRepository.getByUserId(userId);
 
-  console.log("BUSCANDO SUMMARY");
-
   if (!data) {
     return makeSummary({
       userId,

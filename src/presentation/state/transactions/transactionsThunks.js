@@ -11,7 +11,6 @@ import {
 } from "../../../application/usecases/transaction";
 import { firebaseSummaryRepository } from "../../../infrastructure/repositories/firebaseSummaryRepository";
 import { firebaseTransactionManager } from "../../../infrastructure/transactional/firebaseTransactionManager";
-import { useDispatch } from "react-redux";
 import { loadSummary } from "../summary/summaryThunks";
 
 export const loadTransactions = createAsyncThunk(
