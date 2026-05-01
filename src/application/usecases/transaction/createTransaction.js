@@ -3,6 +3,7 @@ import { makeTransaction } from "../../../domain/entities/transaction";
 export const createTransaction = async (
   transactionRepository,
   summaryRepository,
+  analyticsRepository,
   transactionManager,
   receiptService,
   userId,
@@ -36,6 +37,12 @@ export const createTransaction = async (
     await summaryRepository.applyTransactionCreation(
       userId,
       transaction.value,
+      context,
+    );
+
+    await analyticsRepository.applyTransactionCreation(
+      userId,
+      transaction,
       context,
     );
 
