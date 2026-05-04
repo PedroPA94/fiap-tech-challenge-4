@@ -3,7 +3,6 @@ import { login, register, logout } from "./authThunks";
 
 const initialState = {
   user: null,
-  token: null,
   isLoading: false,
   error: null,
 };
@@ -13,6 +12,13 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     clearError(state) {
+      state.error = null;
+    },
+    setUser(state, action) {
+      state.user = action.payload;
+    },
+    clearAuth(state) {
+      state.user = null;
       state.error = null;
     },
   },
@@ -26,7 +32,6 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
-        state.token = action.payload.token;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -41,7 +46,6 @@ const authSlice = createSlice({
       .addCase(register.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
-        state.token = action.payload.token;
       })
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false;
@@ -55,7 +59,6 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.isLoading = false;
         state.user = null;
-        state.token = null;
       })
       .addCase(logout.rejected, (state, action) => {
         state.isLoading = false;
@@ -64,5 +67,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError } = authSlice.actions;
+export const { clearError, setUser, clearAuth } = authSlice.actions;
 export default authSlice.reducer;

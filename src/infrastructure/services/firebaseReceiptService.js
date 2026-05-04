@@ -1,5 +1,6 @@
 import { addDoc, collection, deleteDoc, getDocs } from "firebase/firestore";
 import { processReceipt } from "./processReceipt";
+import { encryptionUtils } from "../security/encryptionUtils";
 import { db } from "../config/firebase";
 
 const COLLECTION_NAME = "transactions";
@@ -7,6 +8,9 @@ const COLLECTION_NAME = "transactions";
 export const firebaseReceiptService = {
   attachToTransaction: async (transactionId, receipt) => {
     const processed = await processReceipt(receipt);
+
+    const encryptedBase64 = encryptionUtils.encrypt(processed.base64);
+
     const receiptRef = collection(
       db,
       COLLECTION_NAME,
@@ -15,13 +19,18 @@ export const firebaseReceiptService = {
     );
 
     await addDoc(receiptRef, {
-      base64: processed.base64,
+      base64: encryptedBase64,
       mimeType: processed.mimeType,
+      encryptedAt: new Date().toISOString(),
+      isEncrypted: true,
     });
   },
 
   updateTransactionReceipt: async (transactionId, receipt) => {
     const processed = await processReceipt(receipt);
+
+    const encryptedBase64 = encryptionUtils.encrypt(processed.base64);
+
     const receiptRef = collection(
       db,
       COLLECTION_NAME,
@@ -35,8 +44,10 @@ export const firebaseReceiptService = {
     await Promise.all(deletions);
 
     await addDoc(receiptRef, {
-      base64: processed.base64,
+      base64: encryptedBase64,
       mimeType: processed.mimeType,
+      encryptedAt: new Date().toISOString(),
+      isEncrypted: true,
     });
   },
 };

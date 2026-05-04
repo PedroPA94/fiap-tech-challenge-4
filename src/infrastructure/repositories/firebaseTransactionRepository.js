@@ -17,21 +17,29 @@ const COLLECTION_NAME = "transactions";
 
 export const firebaseTransactionRepository = {
   getByUserId: async (userId, filters, { limit: pageSize, cursor }) => {
-    const q = query(
-      collection(db, "transactions"),
+    let constraints = [
       where("userId", "==", userId),
 
-      // categoria
       ...(filters.category ? [where("category", "==", filters.category)] : []),
 
-      // intervalo de datas
       ...(filters.startDate ? [where("date", ">=", filters.startDate)] : []),
+
       ...(filters.endDate ? [where("date", "<=", filters.endDate)] : []),
 
       orderBy("date", "desc"),
       limit(pageSize),
-      ...(cursor ? [startAfter(cursor)] : []),
-    );
+    ];
+
+    if (cursor) {
+      const cursorRef = doc(db, COLLECTION_NAME, cursor);
+      const cursorSnap = await getDoc(cursorRef);
+
+      if (cursorSnap.exists()) {
+        constraints.push(startAfter(cursorSnap));
+      }
+    }
+
+    const q = query(collection(db, COLLECTION_NAME), ...constraints);
 
     const snapshot = await getDocs(q);
 
@@ -42,7 +50,10 @@ export const firebaseTransactionRepository = {
 
     const lastDoc = snapshot.docs[snapshot.docs.length - 1];
 
-    return { data, nextCursor: lastDoc || null };
+    return {
+      data,
+      nextCursor: lastDoc ? lastDoc.id : null,
+    };
   },
 
   getById: async (id) => {

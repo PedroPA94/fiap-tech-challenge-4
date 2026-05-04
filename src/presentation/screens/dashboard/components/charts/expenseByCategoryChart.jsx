@@ -1,11 +1,10 @@
-import { View, StyleSheet } from "react-native";
+import { ActivityIndicator, View, StyleSheet } from "react-native";
 import { useMemo } from "react";
 import { PieChart } from "react-native-gifted-charts";
 import Card from "../../../../components/card";
 import Typography from "../../../../components/typography";
 import { colors, spacing, radius, categories } from "../../../../styles/theme";
 import { useAnalytics } from "../../../../state/hooks/useAnalytics";
-import { ActivityIndicator } from "react-native-web";
 
 const ExpenseByCategoryChart = () => {
   const { analytics, isLoading } = useAnalytics();

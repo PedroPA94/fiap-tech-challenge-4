@@ -5,6 +5,7 @@ import {
   logout as logoutUC,
 } from "../../../application/usecases/user";
 import { firebaseAuthRepository } from "../../../infrastructure/repositories/firebaseAuthRepository";
+import { authTokenManager } from "../../../infrastructure/security/authTokenManager";
 
 export const login = createAsyncThunk(
   "auth/login",
@@ -12,8 +13,15 @@ export const login = createAsyncThunk(
     try {
       const result = await loginUC(firebaseAuthRepository, email, password);
 
+      await authTokenManager.saveToken(result.token);
+
+      await authTokenManager.saveUserData({
+        id: result.user.id,
+        email: result.user.email,
+        name: result.user.name,
+      });
+
       return {
-        ...result,
         user: result.user.toJSON(),
       };
     } catch (err) {
@@ -33,8 +41,15 @@ export const register = createAsyncThunk(
         password,
       );
 
+      await authTokenManager.saveToken(result.token);
+
+      await authTokenManager.saveUserData({
+        id: result.user.id,
+        email: result.user.email,
+        name: result.user.name,
+      });
+
       return {
-        ...result,
         user: result.user.toJSON(),
       };
     } catch (err) {
@@ -48,6 +63,7 @@ export const logout = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await logoutUC(firebaseAuthRepository);
+      await authTokenManager.clearAll();
     } catch (err) {
       return rejectWithValue(err.message || "Erro ao fazer logout");
     }

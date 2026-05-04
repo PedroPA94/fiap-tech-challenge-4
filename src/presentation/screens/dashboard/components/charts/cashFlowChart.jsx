@@ -1,11 +1,10 @@
-import { View, StyleSheet } from "react-native";
+import { ActivityIndicator, View, StyleSheet } from "react-native";
 import { useMemo } from "react";
 import { BarChart } from "react-native-gifted-charts";
 import Card from "../../../../components/card";
 import Typography from "../../../../components/typography";
 import { colors, spacing } from "../../../../styles/theme";
 import { useAnalytics } from "../../../../state/hooks/useAnalytics";
-import { ActivityIndicator } from "react-native-web";
 
 const INCOME_COLOR = colors.success;
 const EXPENSE_COLOR = colors.danger;

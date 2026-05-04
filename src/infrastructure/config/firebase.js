@@ -8,14 +8,31 @@ import {
 import { getFirestore } from "firebase/firestore";
 import { Platform } from "react-native";
 
+// Validar se as variáveis de ambiente estão definidas
+const requiredEnvVars = [
+  "EXPO_PUBLIC_FIREBASE_API_KEY",
+  "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN",
+  "EXPO_PUBLIC_FIREBASE_PROJECT_ID",
+  "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET",
+  "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID",
+  "EXPO_PUBLIC_FIREBASE_APP_ID",
+];
+
+const missingVars = requiredEnvVars.filter((v) => !process.env[v]);
+if (missingVars.length > 0) {
+  throw new Error(
+    `Variáveis de ambiente não definidas: ${missingVars.join(", ")}`,
+  );
+}
+
 const firebaseConfig = {
-  apiKey: "AIzaSyASdG81ZzExByrwbZwWB-sPIfcZlz5j07g",
-  authDomain: "fiap-tech-challenge-3-31728.firebaseapp.com",
-  projectId: "fiap-tech-challenge-3-31728",
-  storageBucket: "fiap-tech-challenge-3-31728.firebasestorage.app",
-  messagingSenderId: "70615285266",
-  appId: "1:70615285266:web:520d4759930324c69222cb",
-  measurementId: "G-LX9PCCYMFE",
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID || "",
   databaseURL: "",
 };
 
