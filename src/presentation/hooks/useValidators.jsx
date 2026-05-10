@@ -8,6 +8,9 @@ const CHAR_LIMITS = {
   password: 128,
 };
 
+const PASSWORD_REGEX =
+  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,128}$/;
+
 export function useValidators() {
   const requiredField = "Campo obrigatório";
 
@@ -76,12 +79,16 @@ export function useValidators() {
       return requiredField;
     }
 
-    if (password && password.length < 6) {
-      return "Senha deve ter no mínimo 6 caracteres";
+    if (password && password.length < 8) {
+      return "Senha deve ter no mínimo 8 caracteres";
     }
 
     if (password && password.length > CHAR_LIMITS.password) {
       return `Senha não pode exceder ${CHAR_LIMITS.password} caracteres`;
+    }
+
+    if (password && !PASSWORD_REGEX.test(password)) {
+      return "Senha deve incluir ao menos uma letra maiúscula, minúscula, número e símbolo";
     }
 
     return "";

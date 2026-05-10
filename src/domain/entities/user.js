@@ -4,7 +4,12 @@ import { sanitizationUtils } from "../utils/sanitizationUtils";
 const CONSTRAINTS = {
   name: { min: 3, max: 100 },
   email: { min: 5, max: 255 },
+  password: { min: 8, max: 128 },
 };
+
+// Ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial
+const PASSWORD_REGEX =
+  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,128}$/;
 
 export const makeUser = (data) => {
   const sanitizedEmail = sanitizationUtils.sanitizeEmail(data.email);
@@ -42,6 +47,12 @@ export const makeUser = (data) => {
   ) {
     throw new Error(
       `Nome deve ter entre ${CONSTRAINTS.name.min} e ${CONSTRAINTS.name.max} caracteres`,
+    );
+  }
+
+  if (!PASSWORD_REGEX.test(data.password)) {
+    throw new Error(
+      "Senha deve ter ao menos 8 caracteres, incluindo maiúscula, minúscula, número e símbolo",
     );
   }
 

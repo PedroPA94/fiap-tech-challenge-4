@@ -58,8 +58,6 @@ export default function TransactionFormScreen() {
   const validateFormData = (values) => {
     const errors = {};
 
-    console.log("Validating form data:", typeof values.receipt);
-
     const valueError = validateValue(values.value, true);
     if (valueError) {
       errors.value = valueError;
@@ -94,8 +92,6 @@ export default function TransactionFormScreen() {
           "Comprovante deve ser imagem ou PDF e ter no máximo 300KB";
       }
     }
-
-    console.log("Validation errors:", errors);
 
     return errors;
   };

@@ -3,7 +3,15 @@ import { StyleSheet, TextInput, View } from "react-native";
 import { colors, radius, spacing, typography } from "../styles/theme";
 import Typography from "./typography";
 
-const Input = ({ label, icon, style, error = false, errorMsg, ...props }) => {
+const Input = ({
+  label,
+  icon,
+  style,
+  error = false,
+  errorMsg,
+  hint,
+  ...props
+}) => {
   const [focused, setFocused] = useState(false);
 
   const containerStyles = [
@@ -30,6 +38,10 @@ const Input = ({ label, icon, style, error = false, errorMsg, ...props }) => {
 
       {error && errorMsg && (
         <Typography style={styles.errorText}>{errorMsg}</Typography>
+      )}
+
+      {hint && !error && (
+        <Typography style={styles.hintText}>{hint}</Typography>
       )}
     </View>
   );
@@ -67,6 +79,12 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
+  },
+  hintText: {
+    marginTop: spacing.xs,
+    paddingLeft: spacing.xs,
+    fontSize: typography.size.xs,
+    color: colors.textSecondary,
   },
   errorText: {
     marginTop: spacing.xs,

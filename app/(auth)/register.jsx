@@ -119,6 +119,7 @@ const Register = () => {
               onChangeText={(text) => handleFormChange("password", text)}
               label="Senha"
               placeholder="••••••••"
+              hint="Senha deve ter ao menos 8 caracteres, incluindo maiúscula, minúscula, número e símbolo"
               icon={
                 <Ionicons
                   name="lock-closed-outline"
