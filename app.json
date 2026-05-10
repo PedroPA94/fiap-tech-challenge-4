@@ -3,6 +3,7 @@
     "name": "fiap-tech-challenge-4",
     "slug": "fiap-tech-challenge-4",
     "version": "1.0.0",
+    "jsEngine": "hermes",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "fiaptechchallenge4",
