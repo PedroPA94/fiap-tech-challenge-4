@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { StyleSheet, View, ActivityIndicator } from "react-native";
+import { StyleSheet, View, ActivityIndicator, Alert } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Button from "../../src/presentation/components/button";
 import Input from "../../src/presentation/components/input";
@@ -16,11 +16,14 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useAuth } from "../../src/presentation/state/hooks/useAuth";
+import { useState } from "react";
 
 const Login = () => {
   const router = useRouter();
   const { login, isLoading, error: authError } = useAuth();
-  const { validateEmail, validatePassword } = useValidators();
+  const { validateEmail, validateText } = useValidators();
+  const [attempts, setAttempts] = useState(0);
+  const [blockedUntil, setBlockedUntil] = useState(null);
 
   const validateLogin = (values) => {
     const errors = {};
@@ -28,7 +31,7 @@ const Login = () => {
     const emailError = validateEmail(values.email);
     if (emailError) errors.email = emailError;
 
-    const passwordError = validatePassword(values.password);
+    const passwordError = validateText(values.password);
     if (passwordError) errors.password = passwordError;
 
     return errors;
@@ -44,10 +47,23 @@ const Login = () => {
   };
 
   const handleLogin = async (validValues) => {
+    if (blockedUntil && Date.now() < blockedUntil) {
+      Alert.alert(
+        "Muitas tentativas de login",
+        "Aguarde 30s antes de tentar novamente",
+      );
+    }
+
     try {
       await login(validValues.email, validValues.password);
-    } catch (err) {
-      console.error("Erro de login:", err);
+    } catch (_err) {
+      const nextAttempts = attempts + 1;
+
+      setAttempts(nextAttempts);
+
+      if (nextAttempts >= 5) {
+        setBlockedUntil(Date.now() + 30000);
+      }
     }
   };
 
