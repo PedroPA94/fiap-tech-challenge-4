@@ -20,7 +20,7 @@ import { useAuth } from "../../src/presentation/state/hooks/useAuth";
 const Login = () => {
   const router = useRouter();
   const { login, isLoading, error: authError } = useAuth();
-  const { validateEmail, validateText } = useValidators();
+  const { validateEmail, validatePassword } = useValidators();
 
   const validateLogin = (values) => {
     const errors = {};
@@ -28,7 +28,7 @@ const Login = () => {
     const emailError = validateEmail(values.email);
     if (emailError) errors.email = emailError;
 
-    const passwordError = validateText(values.password, 6);
+    const passwordError = validatePassword(values.password);
     if (passwordError) errors.password = passwordError;
 
     return errors;

@@ -20,19 +20,19 @@ import { useAuth } from "../../src/presentation/state/hooks/useAuth";
 const Register = () => {
   const router = useRouter();
   const { register, isLoading: authLoading } = useAuth();
-  const { validateEmail, validateText } = useValidators();
+  const { validateEmail, validateName, validatePassword } = useValidators();
   const [registroError, setRegistroError] = useState(null);
 
   const validateRegister = (values) => {
     const errors = {};
 
-    const nameError = validateText(values.name, 3);
+    const nameError = validateName(values.name);
     if (nameError) errors.name = nameError;
 
     const emailError = validateEmail(values.email);
     if (emailError) errors.email = emailError;
 
-    const passwordError = validateText(values.password, 6);
+    const passwordError = validatePassword(values.password);
     if (passwordError) errors.password = passwordError;
 
     return errors;

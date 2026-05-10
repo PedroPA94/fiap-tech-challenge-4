@@ -40,7 +40,7 @@ export default function TransactionFormScreen() {
   const isEditing = !!id;
   const { addTransaction, updateTransaction, isLoading } = useTransactions();
 
-  const { validateText, validateValue } = useValidators();
+  const { validateText, validateValue, CHAR_LIMITS } = useValidators();
 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
@@ -69,7 +69,12 @@ export default function TransactionFormScreen() {
       errors.category = "Categoria obrigatória";
     }
 
-    const descriptionError = validateText(values.description, 1, true);
+    const descriptionError = validateText(
+      values.description,
+      3,
+      CHAR_LIMITS.description,
+      true,
+    );
     if (descriptionError) {
       errors.description = descriptionError;
     }

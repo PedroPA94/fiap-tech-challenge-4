@@ -1,19 +1,48 @@
+import { sanitizationUtils } from "../utils/sanitizationUtils";
+
 const ACCEPTED_FILE_TYPES = ["image/*", "application/pdf"];
 const MAX_FILE_SIZE = 300 * 1024; // 300KB
 
+// Limites de caracteres
+const CONSTRAINTS = {
+  description: { min: 3, max: 500 },
+};
+
 export const makeTransaction = (data) => {
-  if (!data.description?.trim()) {
+  const sanitizedDescription = sanitizationUtils.sanitizeText(
+    data.description,
+    CONSTRAINTS.description.max,
+  );
+  const sanitizedCategory = sanitizationUtils.sanitizeText(data.category, 50);
+
+  if (!sanitizedDescription?.trim()) {
     throw new Error("Descrição é obrigatória");
   }
+
+  if (
+    !sanitizationUtils.validateLength(
+      sanitizedDescription,
+      CONSTRAINTS.description.min,
+      CONSTRAINTS.description.max,
+    )
+  ) {
+    throw new Error(
+      `Descrição deve ter entre ${CONSTRAINTS.description.min} e ${CONSTRAINTS.description.max} caracteres`,
+    );
+  }
+
   if (data.value === 0) {
     throw new Error("Valor não pode ser zero");
   }
+
   if (!["expense", "income"].includes(data.type)) {
     throw new Error("Tipo deve ser expense ou income");
   }
+
   if (!data.date) {
     throw new Error("Data é obrigatória");
   }
+
   if (data.receipt) {
     if (typeof data.receipt !== "object") {
       throw new Error("Formato de comprovante inválido");
@@ -29,16 +58,15 @@ export const makeTransaction = (data) => {
   }
 
   const date = new Date(data.date);
-
   const value =
     data.type === "expense" ? -Math.abs(data.value) : Math.abs(data.value);
 
   return Object.freeze({
     id: data.id,
     userId: data.userId,
-    description: data.description.trim(),
+    description: sanitizationUtils.normalizeWhitespace(sanitizedDescription),
     type: data.type,
-    category: data.category,
+    category: sanitizedCategory,
     hasReceipt: data.hasReceipt || false,
     date,
     value,

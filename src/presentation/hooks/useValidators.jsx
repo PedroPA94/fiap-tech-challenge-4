@@ -1,5 +1,13 @@
 import { useCallback } from "react";
 
+// Limites de caracteres para validação em tempo real
+const CHAR_LIMITS = {
+  name: 100,
+  email: 255,
+  description: 500,
+  password: 128,
+};
+
 export function useValidators() {
   const requiredField = "Campo obrigatório";
 
@@ -10,6 +18,10 @@ export function useValidators() {
       return requiredField;
     }
 
+    if (email.length > CHAR_LIMITS.email) {
+      return `Email não pode exceder ${CHAR_LIMITS.email} caracteres`;
+    }
+
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return "Email inválido";
     }
@@ -17,19 +29,26 @@ export function useValidators() {
     return "";
   }, []);
 
-  const validateText = useCallback((value, min = 1, required = true) => {
-    const texto = value?.trim() ?? "";
+  const validateText = useCallback(
+    (value, min = 1, max = CHAR_LIMITS.description, required = true) => {
+      const texto = value?.trim() ?? "";
 
-    if (required && !texto) {
-      return requiredField;
-    }
+      if (required && !texto) {
+        return requiredField;
+      }
 
-    if (texto && texto.length < min) {
-      return `Deve ter no mínimo ${min} caracteres`;
-    }
+      if (texto && texto.length < min) {
+        return `Deve ter no mínimo ${min} caracteres`;
+      }
 
-    return "";
-  }, []);
+      if (texto && texto.length > max) {
+        return `Não pode exceder ${max} caracteres`;
+      }
+
+      return "";
+    },
+    [],
+  );
 
   const validateValue = useCallback((value, required = true) => {
     if (required && !value?.trim()) {
@@ -43,9 +62,37 @@ export function useValidators() {
     return "";
   }, []);
 
+  const validateName = useCallback(
+    (value, required = true) => {
+      return validateText(value, 3, CHAR_LIMITS.name, required);
+    },
+    [validateText],
+  );
+
+  const validatePassword = useCallback((value, required = true) => {
+    const password = value?.trim() ?? "";
+
+    if (required && !password) {
+      return requiredField;
+    }
+
+    if (password && password.length < 6) {
+      return "Senha deve ter no mínimo 6 caracteres";
+    }
+
+    if (password && password.length > CHAR_LIMITS.password) {
+      return `Senha não pode exceder ${CHAR_LIMITS.password} caracteres`;
+    }
+
+    return "";
+  }, []);
+
   return {
     validateEmail,
     validateText,
     validateValue,
+    validateName,
+    validatePassword,
+    CHAR_LIMITS,
   };
 }
