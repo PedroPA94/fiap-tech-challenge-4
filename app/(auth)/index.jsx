@@ -34,7 +34,7 @@ const Login = () => {
     return errors;
   };
 
-  const { values, errors, handleChange, handleSubmit } = useForm(
+  const { values, errors, handleFormChange, handleFormSubmit } = useForm(
     { email: "", password: "" },
     validateLogin,
   );
@@ -83,7 +83,7 @@ const Login = () => {
 
           <Input
             value={values.email}
-            onChangeText={(text) => handleChange("email", text)}
+            onChangeText={(text) => handleFormChange("email", text)}
             label="Email"
             placeholder="exemplo@email.com"
             icon={<Ionicons name="mail-outline" size={20} color="#94A3B8" />}
@@ -96,7 +96,7 @@ const Login = () => {
           />
           <Input
             value={values.password}
-            onChangeText={(text) => handleChange("password", text)}
+            onChangeText={(text) => handleFormChange("password", text)}
             label="Senha"
             placeholder="••••••••"
             icon={
@@ -111,7 +111,7 @@ const Login = () => {
           />
 
           <Button
-            onPress={() => handleSubmit(handleLogin)}
+            onPress={() => handleFormSubmit(handleLogin)}
             disabled={isLoading}
           >
             {isLoading ? <ActivityIndicator color={colors.white} /> : "Entrar"}

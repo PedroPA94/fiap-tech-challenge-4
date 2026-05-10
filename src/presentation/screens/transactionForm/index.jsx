@@ -32,6 +32,9 @@ import { firebaseAuthRepository } from "../../../infrastructure/repositories/fir
 import { useTransactions } from "../../state/hooks/useTransactions";
 
 export default function TransactionFormScreen() {
+  const ACCEPTED_FILE_TYPES = ["image/*", "application/pdf"];
+  const MAX_FILE_SIZE = 300 * 1024; // 300KB
+
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const isEditing = !!id;
@@ -55,6 +58,8 @@ export default function TransactionFormScreen() {
   const validateFormData = (values) => {
     const errors = {};
 
+    console.log("Validating form data:", typeof values.receipt);
+
     const valueError = validateValue(values.value, true);
     if (valueError) {
       errors.value = valueError;
@@ -73,10 +78,24 @@ export default function TransactionFormScreen() {
       errors.date = "Data obrigatória";
     }
 
+    if (values.receipt) {
+      if (typeof values.receipt !== "object") {
+        errors.receipt = "Formato de comprovante inválido";
+      } else if (
+        !ACCEPTED_FILE_TYPES.includes(values.receipt.mimeType) ||
+        values.receipt.size > MAX_FILE_SIZE
+      ) {
+        errors.receipt =
+          "Comprovante deve ser imagem ou PDF e ter no máximo 300KB";
+      }
+    }
+
+    console.log("Validation errors:", errors);
+
     return errors;
   };
 
-  const { values, errors, handleChange, handleSubmit } = useForm(
+  const { values, errors, handleFormChange, handleFormSubmit } = useForm(
     initialValues,
     validateFormData,
   );
@@ -101,14 +120,14 @@ export default function TransactionFormScreen() {
           "/" +
           date.getFullYear();
 
-        handleChange("type", transaction.type);
-        handleChange("value", Math.abs(transaction.value).toString());
-        handleChange("category", transaction.category);
-        handleChange("description", transaction.description);
-        handleChange("date", formattedDate);
+        handleFormChange("type", transaction.type);
+        handleFormChange("value", Math.abs(transaction.value).toString());
+        handleFormChange("category", transaction.category);
+        handleFormChange("description", transaction.description);
+        handleFormChange("date", formattedDate);
 
         if (transaction.receipt) {
-          handleChange("receipt", transaction.receipt);
+          handleFormChange("receipt", transaction.receipt);
         }
       } catch (_e) {
         Alert.alert("Erro", "Falha ao carregar transação");
@@ -165,11 +184,11 @@ export default function TransactionFormScreen() {
   };
 
   const handleTypeChange = (newType) => {
-    handleChange("type", newType);
+    handleFormChange("type", newType);
     if (newType === "income") {
-      handleChange("category", "income");
+      handleFormChange("category", "income");
     } else {
-      handleChange("category", "");
+      handleFormChange("category", "");
     }
     setShowCategoryPicker(false);
   };
@@ -178,7 +197,7 @@ export default function TransactionFormScreen() {
     setShowDatePicker(false);
 
     if (!date || event.type === "dismissed") {
-      handleChange("date", new Date().toISOString().split("T")[0]);
+      handleFormChange("date", new Date().toISOString().split("T")[0]);
       return;
     }
 
@@ -189,11 +208,11 @@ export default function TransactionFormScreen() {
       "/" +
       date.getFullYear();
 
-    handleChange("date", formatted);
+    handleFormChange("date", formatted);
   };
 
   const handleCategoryChange = (newCategory) => {
-    handleChange("category", newCategory);
+    handleFormChange("category", newCategory);
   };
 
   return (
@@ -231,7 +250,7 @@ export default function TransactionFormScreen() {
             <TransactionValueInput
               type={values.type}
               value={values.value}
-              onChangeText={(text) => handleChange("value", text)}
+              onChangeText={(text) => handleFormChange("value", text)}
               error={!!errors.value}
               errorMsg={errors.value}
             />
@@ -251,7 +270,7 @@ export default function TransactionFormScreen() {
                 label="Descrição"
                 placeholder="Ex: Compras no mercado"
                 value={values.description}
-                onChangeText={(text) => handleChange("description", text)}
+                onChangeText={(text) => handleFormChange("description", text)}
                 error={!!errors.description}
                 errorMsg={errors.description}
                 icon={
@@ -265,7 +284,7 @@ export default function TransactionFormScreen() {
 
               <TransactionDateInput
                 date={values.date}
-                onDateChange={handleChange}
+                onDateChange={handleFormChange}
                 onDateSelect={handleDateSelect}
                 showDatePicker={showDatePicker}
                 onShowDatePickerChange={setShowDatePicker}
@@ -274,7 +293,9 @@ export default function TransactionFormScreen() {
               />
 
               <ReceiptAttachment
-                onChange={(file) => handleChange("receipt", file)}
+                onChange={(file) => handleFormChange("receipt", file)}
+                error={!!errors.receipt}
+                errorMsg={errors.receipt}
               />
             </View>
           </Animated.View>
@@ -290,7 +311,7 @@ export default function TransactionFormScreen() {
             </View>
           )}
           <Button
-            onPress={() => handleSubmit(handleSaveTransaction)}
+            onPress={() => handleFormSubmit(handleSaveTransaction)}
             style={styles.submitButton}
             disabled={isLoading}
           >

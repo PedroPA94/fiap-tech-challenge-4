@@ -38,7 +38,7 @@ const Register = () => {
     return errors;
   };
 
-  const { values, errors, handleChange, handleSubmit } = useForm(
+  const { values, errors, handleFormChange, handleFormSubmit } = useForm(
     { name: "", email: "", password: "" },
     validateRegister,
   );
@@ -91,7 +91,7 @@ const Register = () => {
           <View style={styles.inputContainer}>
             <Input
               value={values.name}
-              onChangeText={(text) => handleChange("name", text)}
+              onChangeText={(text) => handleFormChange("name", text)}
               label="Nome completo"
               placeholder="Seu nome"
               icon={
@@ -103,7 +103,7 @@ const Register = () => {
             />
             <Input
               value={values.email}
-              onChangeText={(text) => handleChange("email", text)}
+              onChangeText={(text) => handleFormChange("email", text)}
               label="Email"
               placeholder="exemplo@email.com"
               icon={<Ionicons name="mail-outline" size={20} color="#94A3B8" />}
@@ -116,7 +116,7 @@ const Register = () => {
             />
             <Input
               value={values.password}
-              onChangeText={(text) => handleChange("password", text)}
+              onChangeText={(text) => handleFormChange("password", text)}
               label="Senha"
               placeholder="••••••••"
               icon={
@@ -135,7 +135,7 @@ const Register = () => {
             />
           </View>
           <Button
-            onPress={() => handleSubmit(handleRegister)}
+            onPress={() => handleFormSubmit(handleRegister)}
             style={{ marginTop: spacing.md }}
             disabled={authLoading}
           >

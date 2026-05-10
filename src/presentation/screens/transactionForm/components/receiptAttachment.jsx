@@ -8,8 +8,8 @@ import * as DocumentPicker from "expo-document-picker";
 
 const MAX_FILE_SIZE = 300 * 1024; // 300KB
 
-export default function ReceiptAttachment({ onChange }) {
-  const [fileName, setFileName] = useState(null); // 👈 estado novo
+export default function ReceiptAttachment({ onChange, error, errorMsg }) {
+  const [fileName, setFileName] = useState(null);
 
   const handlePickFile = async () => {
     try {
@@ -30,7 +30,7 @@ export default function ReceiptAttachment({ onChange }) {
         return;
       }
 
-      setFileName(file.name); // 👈 salva o nome
+      setFileName(file.name);
 
       onChange?.({
         uri: file.uri,
@@ -44,17 +44,23 @@ export default function ReceiptAttachment({ onChange }) {
   };
 
   return (
-    <TouchableOpacity
-      style={styles.receiptPlaceholder}
-      onPress={handlePickFile}
-      activeOpacity={0.7}
-    >
-      <Ionicons name="attach" size={24} color={colors.textSecondary} />
+    <>
+      <TouchableOpacity
+        style={[
+          styles.receiptPlaceholder,
+          error && { borderColor: colors.danger },
+        ]}
+        onPress={handlePickFile}
+        activeOpacity={0.7}
+      >
+        <Ionicons name="attach" size={24} color={colors.textSecondary} />
 
-      <Typography style={styles.receiptText}>
-        {fileName ? `Arquivo: ${fileName}` : "Anexar comprovante (até 300KB)"}
-      </Typography>
-    </TouchableOpacity>
+        <Typography style={styles.receiptText}>
+          {fileName ? `Arquivo: ${fileName}` : "Anexar comprovante (até 300KB)"}
+        </Typography>
+      </TouchableOpacity>
+      {error && <Typography style={styles.errorText}>{errorMsg}</Typography>}
+    </>
   );
 }
 
@@ -71,5 +77,9 @@ const styles = StyleSheet.create({
   receiptText: {
     color: colors.textSecondary,
     fontSize: typography.size.sm,
+  },
+  errorText: {
+    color: colors.danger,
+    fontSize: typography.size.xs,
   },
 });

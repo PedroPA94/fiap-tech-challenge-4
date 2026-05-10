@@ -4,7 +4,7 @@ export function useForm(initialValues, validationFn) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
 
-  const handleChange = (field, value) => {
+  const handleFormChange = (field, value) => {
     setValues((prev) => ({
       ...prev,
       [field]: value,
@@ -17,7 +17,7 @@ export function useForm(initialValues, validationFn) {
     }));
   };
 
-  const handleSubmit = (onValidFn) => {
+  const handleFormSubmit = (onValidFn) => {
     const validationErrors = validationFn(values);
     setErrors(validationErrors);
 
@@ -29,7 +29,7 @@ export function useForm(initialValues, validationFn) {
   return {
     values,
     errors,
-    handleChange,
-    handleSubmit,
+    handleFormChange,
+    handleFormSubmit,
   };
 }

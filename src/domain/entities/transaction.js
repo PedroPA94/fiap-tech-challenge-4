@@ -1,3 +1,6 @@
+const ACCEPTED_FILE_TYPES = ["image/*", "application/pdf"];
+const MAX_FILE_SIZE = 300 * 1024; // 300KB
+
 export const makeTransaction = (data) => {
   if (!data.description?.trim()) {
     throw new Error("Descrição é obrigatória");
@@ -10,6 +13,19 @@ export const makeTransaction = (data) => {
   }
   if (!data.date) {
     throw new Error("Data é obrigatória");
+  }
+  if (data.receipt) {
+    if (typeof data.receipt !== "object") {
+      throw new Error("Formato de comprovante inválido");
+    }
+    if (
+      !ACCEPTED_FILE_TYPES.includes(data.receipt.mimeType) ||
+      data.receipt.size > MAX_FILE_SIZE
+    ) {
+      throw new Error(
+        "Comprovante deve ser imagem ou PDF e ter no máximo 300KB",
+      );
+    }
   }
 
   const date = new Date(data.date);
