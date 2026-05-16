@@ -8,6 +8,7 @@ import TransactionsFilter from "./components/transactionsFilter";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useTransactions } from "../../state/hooks/useTransactions";
+import { useDebouncedValue } from "../../hooks/useDebouncedValue";
 
 const TransactionsScreen = () => {
   const router = useRouter();
@@ -26,6 +27,8 @@ const TransactionsScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
 
+  const debouncedSearch = useDebouncedValue(search, 300);
+
   useEffect(() => {
     loadTransactions();
   }, [loadTransactions]);
@@ -41,14 +44,14 @@ const TransactionsScreen = () => {
 
   const formattedTransactions = useMemo(() => {
     return transactions
-      .filter((transaction) => transaction.matchesSearch(search))
+      .filter((transaction) => transaction.matchesSearch(debouncedSearch))
       .map((t) => ({
         ...t,
         formattedDate: new Intl.DateTimeFormat("pt-BR").format(
           new Date(t.date),
         ),
       }));
-  }, [transactions, search]);
+  }, [transactions, debouncedSearch]);
 
   const editTransaction = useCallback(
     (id) => {
