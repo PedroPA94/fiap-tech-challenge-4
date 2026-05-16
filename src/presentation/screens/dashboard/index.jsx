@@ -1,8 +1,8 @@
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, View, ScrollView, ActivityIndicator } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import { shadow, spacing } from "../../styles/theme";
-import Balance from "./components/balance";
+import { colors, shadow, spacing } from "../../styles/theme";
 import Header from "./components/header";
+import Balance from "./components/balance";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -15,18 +15,25 @@ import ExpenseByCategoryChart from "./components/charts/expenseByCategoryChart";
 import CashFlowChart from "./components/charts/cashFlowChart";
 import { useSummary } from "../../state/hooks/useSummary";
 import { useAnalytics } from "../../state/hooks/useAnalytics";
+import Card from "../../components/card";
+import Typography from "../../components/typography";
 
 const DashboardScreen = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { loadSummary } = useSummary();
-  const { loadAnalytics } = useAnalytics();
+  const {
+    analytics,
+    isLoading: isLoadingAnalytics,
+    loadAnalytics,
+  } = useAnalytics();
+
+  const shouldRenderCharts = !isLoadingAnalytics && analytics;
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        await loadSummary();
-        await loadAnalytics();
+        await Promise.all([loadSummary(), loadAnalytics()]);
       } catch (err) {
         console.error("Erro ao carregar dados para o Dashboard:", err);
       }
@@ -39,7 +46,6 @@ const DashboardScreen = () => {
   const addTransaction = () => {
     router.push("/(modals)/transaction");
   };
-
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.headerContainer}>
@@ -56,19 +62,34 @@ const DashboardScreen = () => {
           <Balance />
         </Animated.View>
 
-        <Animated.View
-          entering={FadeInDown.delay(600).duration(350).springify()}
-          style={styles.chartsContainer}
-        >
-          <ExpenseByCategoryChart />
-        </Animated.View>
+        {isLoadingAnalytics && (
+          <Card>
+            <View style={styles.chartsPlaceholder}>
+              <ActivityIndicator size="large" color={colors.primary} />
+              <Typography style={styles.loadingText}>
+                Carregando gráficos...
+              </Typography>
+            </View>
+          </Card>
+        )}
 
-        <Animated.View
-          entering={FadeInDown.delay(400).duration(350).springify()}
-          style={styles.chartsContainer}
-        >
-          <CashFlowChart />
-        </Animated.View>
+        {shouldRenderCharts && (
+          <>
+            <Animated.View
+              entering={FadeInDown.delay(400).duration(350).springify()}
+              style={styles.chartsContainer}
+            >
+              <ExpenseByCategoryChart />
+            </Animated.View>
+
+            <Animated.View
+              entering={FadeInDown.delay(600).duration(350).springify()}
+              style={styles.chartsContainer}
+            >
+              <CashFlowChart />
+            </Animated.View>
+          </>
+        )}
       </ScrollView>
 
       <View style={[styles.addButton, { bottom: insets.bottom }]}>
@@ -105,5 +126,13 @@ const styles = StyleSheet.create({
   addButton: {
     position: "absolute",
     right: 30,
+  },
+  chartsPlaceholder: {
+    paddingVertical: spacing.xl,
+    alignItems: "center",
+    gap: spacing.md,
+  },
+  loadingText: {
+    color: colors.textSecondary,
   },
 });
