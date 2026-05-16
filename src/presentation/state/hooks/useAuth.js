@@ -16,11 +16,10 @@ export const useAuth = () => {
   useEffect(() => {
     const loadSecureData = async () => {
       try {
-        const token = await authTokenManager.getToken();
-        const userData = await authTokenManager.getUserData();
+        const session = await authTokenManager.getSession();
 
-        setSecureToken(token);
-        setSecureUserData(userData);
+        setSecureToken(session?.token ?? null);
+        setSecureUserData(session?.user ?? null);
       } catch (error) {
         console.error("Erro ao carregar dados de autenticação segura:", error);
       } finally {

@@ -13,12 +13,13 @@ export const login = createAsyncThunk(
     try {
       const result = await loginUC(firebaseAuthRepository, email, password);
 
-      await authTokenManager.saveToken(result.token);
-
-      await authTokenManager.saveUserData({
-        id: result.user.id,
-        email: result.user.email,
-        name: result.user.name,
+      await authTokenManager.saveSession({
+        token: result.token,
+        user: {
+          id: result.user.id,
+          email: result.user.email,
+          name: result.user.name,
+        },
       });
 
       return {
@@ -41,12 +42,13 @@ export const register = createAsyncThunk(
         password,
       );
 
-      await authTokenManager.saveToken(result.token);
-
-      await authTokenManager.saveUserData({
-        id: result.user.id,
-        email: result.user.email,
-        name: result.user.name,
+      await authTokenManager.saveSession({
+        token: result.token,
+        user: {
+          id: result.user.id,
+          email: result.user.email,
+          name: result.user.name,
+        },
       });
 
       return {

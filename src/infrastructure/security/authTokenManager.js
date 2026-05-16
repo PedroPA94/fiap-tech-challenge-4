@@ -1,98 +1,155 @@
-import { secureStorage } from "./secureStorage";
+import * as SecureStore from "expo-secure-store";
 
 /**
  * Gerenciador seguro de tokens de autenticação
- * Armazena tokens de forma criptografada no Keychain do dispositivo
+ * Usa expo-secure-store para armazenar dados sensíveis de sessão. *
  *
  * Nota: As chaves devem conter apenas caracteres alpanuméricos, ".", "-", e "_"
  * conforme requisitos do expo-secure-store
  */
 
-const TOKEN_KEY = "bytebank_auth_token";
-const USER_DATA_KEY = "bytebank_user_data";
+const TOKEN_KEY = process.env.EXPO_PUBLIC_TOKEN_KEY;
+const USER_DATA_KEY = process.env.EXPO_PUBLIC_USER_DATA_KEY;
+
+const secureStoreOptions = {
+  keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+};
+
+/**
+ * Salva o token de autenticação de forma segura.
+ * @param {string} token - Token de autenticação
+ * @returns {Promise<boolean>}
+ */
+const saveToken = async (token) => {
+  if (!token) {
+    throw new Error("Token não pode estar vazio");
+  }
+
+  await SecureStore.setItemAsync(TOKEN_KEY, token, secureStoreOptions);
+  return true;
+};
+
+/**
+ * Recupera o token de autenticação armazenado
+ * @returns {Promise<string|null>}
+ */
+const getToken = async () => {
+  return SecureStore.getItemAsync(TOKEN_KEY, secureStoreOptions);
+};
+
+/**
+ * Remove o token de autenticação
+ * @returns {Promise<boolean>}
+ */
+const clearToken = async () => {
+  await SecureStore.deleteItemAsync(TOKEN_KEY, secureStoreOptions);
+  return true;
+};
+
+/**
+ * Salva dados do usuário de forma segura
+ * @param {Object} userData - Dados do usuário
+ * @returns {Promise<boolean>}
+ */
+const saveUserData = async (userData) => {
+  if (!userData) {
+    throw new Error("Dados do usuário não podem estar vazios");
+  }
+
+  await SecureStore.setItemAsync(
+    USER_DATA_KEY,
+    JSON.stringify(userData),
+    secureStoreOptions,
+  );
+
+  return true;
+};
+
+/**
+ * Recupera dados do usuário armazenados
+ * @returns {Promise<Object|null>}
+ */
+const getUserData = async () => {
+  const userData = await SecureStore.getItemAsync(
+    USER_DATA_KEY,
+    secureStoreOptions,
+  );
+
+  if (!userData) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(userData);
+  } catch {
+    await SecureStore.deleteItemAsync(USER_DATA_KEY, secureStoreOptions);
+    return null;
+  }
+};
+
+/**
+ * Remove dados do usuário
+ * @returns {Promise<boolean>}
+ */
+const clearUserData = async () => {
+  await SecureStore.deleteItemAsync(USER_DATA_KEY, secureStoreOptions);
+  return true;
+};
 
 export const authTokenManager = {
   /**
-   * Salva o token de autenticação de forma segura
-   * @param {string} token - Token JWT
+   * Salva token e dados do usuário em uma única operação lógica.
+   * @param {{ token: string, user: Object }} session
    * @returns {Promise<boolean>}
    */
-  saveToken: async (token) => {
+  saveSession: async ({ token, user }) => {
     if (!token) {
-      throw new Error("Token não pode estar vazio");
+      throw new Error("Token de autenticação inválido");
     }
-    return await secureStorage.setItem(TOKEN_KEY, token);
-  },
 
-  /**
-   * Recupera o token de autenticação armazenado
-   * @returns {Promise<string|null>}
-   */
-  getToken: async () => {
-    return await secureStorage.getItem(TOKEN_KEY);
-  },
-
-  /**
-   * Remove o token de autenticação
-   * @returns {Promise<boolean>}
-   */
-  clearToken: async () => {
-    return await secureStorage.removeItem(TOKEN_KEY);
-  },
-
-  /**
-   * Verifica se um token está armazenado
-   * @returns {Promise<boolean>}
-   */
-  hasToken: async () => {
-    const token = await authTokenManager.getToken();
-    return !!token;
-  },
-
-  /**
-   * Salva dados do usuário de forma segura
-   * @param {Object} userData - Dados do usuário
-   * @returns {Promise<boolean>}
-   */
-  saveUserData: async (userData) => {
-    if (!userData) {
-      throw new Error("Dados do usuário não podem estar vazios");
+    if (!user) {
+      throw new Error("Dados do usuário inválidos");
     }
-    const userDataString = JSON.stringify(userData);
-    return await secureStorage.setItem(USER_DATA_KEY, userDataString);
+
+    await Promise.all([saveToken(token), saveUserData(user)]);
+
+    return true;
   },
 
   /**
-   * Recupera dados do usuário armazenados
-   * @returns {Promise<Object|null>}
+   * Recupera a sessão armazenada.
+   * @returns {Promise<{ token: string, user: Object }|null>}
    */
-  getUserData: async () => {
-    const userData = await secureStorage.getItem(USER_DATA_KEY);
-    if (!userData) return null;
-    try {
-      return JSON.parse(userData);
-    } catch (error) {
-      console.error("Erro ao parsear dados do usuário:", error);
+  getSession: async () => {
+    const [token, user] = await Promise.all([getToken(), getUserData()]);
+
+    if (!token || !user) {
       return null;
     }
+
+    return {
+      token,
+      user,
+    };
   },
 
   /**
-   * Remove dados do usuário
+   * Remove token e dados do usuário.
    * @returns {Promise<boolean>}
    */
-  clearUserData: async () => {
-    return await secureStorage.removeItem(USER_DATA_KEY);
+  clearSession: async () => {
+    await Promise.all([clearToken(), clearUserData()]);
+
+    return true;
   },
 
   /**
-   * Limpa toda a informação de autenticação (logout)
+   * Limpa toda a informação de autenticação.
    * @returns {Promise<boolean>}
    */
   clearAll: async () => {
     try {
-      await authTokenManager.clearToken();
-      await authTokenManager.clearUserData();
+      await authTokenManager.clearSession();
       return true;
     } catch (error) {
       console.error("Erro ao limpar autenticação:", error);
