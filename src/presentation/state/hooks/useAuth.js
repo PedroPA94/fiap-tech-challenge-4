@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, register, logout } from "../auth/authThunks";
 import { clearError } from "../auth/authSlice";
 import { makeUser } from "../../../domain/entities/user";
-import { authTokenManager } from "../../../infrastructure/security/authTokenManager";
+import { container } from "../../../infrastructure/di/container";
 
 export const useAuth = () => {
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ export const useAuth = () => {
   useEffect(() => {
     const loadSecureData = async () => {
       try {
-        const session = await authTokenManager.getSession();
+        const session = await container.authTokenManager.getSession();
 
         setSecureToken(session?.token ?? null);
         setSecureUserData(session?.user ?? null);

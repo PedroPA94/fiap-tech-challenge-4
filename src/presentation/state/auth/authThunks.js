@@ -4,7 +4,6 @@ import {
   register as registerUC,
   logout as logoutUC,
 } from "../../../application/usecases/user";
-import { authTokenManager } from "../../../infrastructure/security/authTokenManager";
 import { container } from "../../../infrastructure/di/container";
 
 export const login = createAsyncThunk(
@@ -17,7 +16,7 @@ export const login = createAsyncThunk(
         password,
       );
 
-      await authTokenManager.saveSession({
+      await container.authTokenManager.saveSession({
         token: result.token,
         user: {
           id: result.user.id,
@@ -46,7 +45,7 @@ export const register = createAsyncThunk(
         password,
       );
 
-      await authTokenManager.saveSession({
+      await container.authTokenManager.saveSession({
         token: result.token,
         user: {
           id: result.user.id,
@@ -69,7 +68,7 @@ export const logout = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await logoutUC(container.repositories.auth);
-      await authTokenManager.clearAll();
+      await container.authTokenManager.clearAll();
     } catch (err) {
       return rejectWithValue(err.message || "Erro ao fazer logout");
     }

@@ -4,6 +4,8 @@ import { firebaseSummaryRepository } from "../repositories/firebaseSummaryReposi
 import { firebaseAnalyticsRepository } from "../repositories/firebaseAnalyticsRepository";
 import { firebaseReceiptService } from "../services/firebaseReceiptService";
 import { firebaseTransactionManager } from "../transactional/firebaseTransactionManager";
+import { authTokenManager } from "../security/authTokenManager";
+import { cacheStorage } from "../cache/cacheStorage";
 
 export const container = {
   repositories: {
@@ -18,4 +20,6 @@ export const container = {
   },
 
   transactionManager: firebaseTransactionManager,
+  authTokenManager: authTokenManager,
+  cacheStorage: cacheStorage,
 };

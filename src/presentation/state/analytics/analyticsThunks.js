@@ -1,7 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getCurrentUser as getCurrentUserUC } from "../../../application/usecases/user";
 import { getUserAnalytics as getUserAnalyticsUC } from "../../../application/usecases/analytics/getUserAnalytics";
-import { cacheStorage } from "../../../infrastructure/cache/cacheStorage";
 import { container } from "../../../infrastructure/di/container";
 
 const getAnalyticsCacheKey = (userId) => `analytics:${userId}`;
@@ -14,7 +13,7 @@ export const loadAnalytics = createAsyncThunk(
       const cacheKey = getAnalyticsCacheKey(user.uid);
 
       if (!forceRefresh) {
-        const cachedAnalytics = await cacheStorage.getItem(cacheKey);
+        const cachedAnalytics = await container.cacheStorage.getItem(cacheKey);
 
         if (cachedAnalytics) {
           return cachedAnalytics;
@@ -28,7 +27,7 @@ export const loadAnalytics = createAsyncThunk(
 
       const analyticsData = analytics.toJSON();
 
-      await cacheStorage.setItem(cacheKey, analyticsData);
+      await container.cacheStorage.setItem(cacheKey, analyticsData);
 
       return analyticsData;
     } catch (err) {
