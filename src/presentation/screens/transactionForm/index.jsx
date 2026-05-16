@@ -27,9 +27,8 @@ import TransactionDateInput from "./components/transactionDateInput";
 import ReceiptAttachment from "./components/receiptAttachment";
 import { getTransactionById as getTransactionByIdUC } from "../../../application/usecases/transaction";
 import { getCurrentUser as getCurrentUserUC } from "../../../application/usecases/user";
-import { firebaseTransactionRepository } from "../../../infrastructure/repositories/firebaseTransactionRepository";
-import { firebaseAuthRepository } from "../../../infrastructure/repositories/firebaseAuthRepository";
 import { useTransactions } from "../../state/hooks/useTransactions";
+import { container } from "../../../infrastructure/di/container";
 
 export default function TransactionFormScreen() {
   const ACCEPTED_FILE_TYPES = ["image/*", "application/pdf"];
@@ -106,11 +105,11 @@ export default function TransactionFormScreen() {
 
     const loadTransaction = async () => {
       try {
-        const user = getCurrentUserUC(firebaseAuthRepository);
+        const user = getCurrentUserUC(container.repositories.auth);
         const transaction = await getTransactionByIdUC(
           id,
           user.uid,
-          firebaseTransactionRepository,
+          container.repositories.transaction,
         );
 
         const date = new Date(transaction.date);

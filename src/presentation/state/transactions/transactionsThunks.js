@@ -1,25 +1,19 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { firebaseTransactionRepository } from "../../../infrastructure/repositories/firebaseTransactionRepository";
-import { firebaseAuthRepository } from "../../../infrastructure/repositories/firebaseAuthRepository";
-import { firebaseReceiptService } from "../../../infrastructure/services/firebaseReceiptService";
-
 import { getCurrentUser as getCurrentUserUC } from "../../../application/usecases/user";
 import {
   createTransaction as createTransactionUC,
   getUserTransactions as getUserTransactionsUC,
   updateTransaction as updateTransactionUC,
 } from "../../../application/usecases/transaction";
-import { firebaseSummaryRepository } from "../../../infrastructure/repositories/firebaseSummaryRepository";
-import { firebaseTransactionManager } from "../../../infrastructure/transactional/firebaseTransactionManager";
 import { loadSummary } from "../summary/summaryThunks";
-import { firebaseAnalyticsRepository } from "../../../infrastructure/repositories/firebaseAnalyticsRepository";
 import { loadAnalytics } from "../analytics/analyticsThunks";
+import { container } from "../../../infrastructure/di/container";
 
 export const loadTransactions = createAsyncThunk(
   "transactions/load",
   async ({ loadMore = false } = {}, { getState, rejectWithValue }) => {
     try {
-      const user = getCurrentUserUC(firebaseAuthRepository);
+      const user = getCurrentUserUC(container.repositories.auth);
 
       const { cursor, hasMore, filters } = getState().transactions;
 
@@ -28,7 +22,7 @@ export const loadTransactions = createAsyncThunk(
       }
 
       const result = await getUserTransactionsUC(
-        firebaseTransactionRepository,
+        container.repositories.transaction,
         user.uid,
         filters,
         {
@@ -54,14 +48,14 @@ export const addTransaction = createAsyncThunk(
     try {
       const { receipt, ...data } = transactionData;
 
-      const user = getCurrentUserUC(firebaseAuthRepository);
+      const user = getCurrentUserUC(container.repositories.auth);
 
       const transaction = await createTransactionUC(
-        firebaseTransactionRepository,
-        firebaseSummaryRepository,
-        firebaseAnalyticsRepository,
-        firebaseTransactionManager,
-        firebaseReceiptService,
+        container.repositories.transaction,
+        container.repositories.summary,
+        container.repositories.analytics,
+        container.transactionManager,
+        container.services.receipt,
         user.uid,
         data,
         receipt,
@@ -83,14 +77,14 @@ export const updateTransaction = createAsyncThunk(
     try {
       const { receipt, ...data } = transactionData;
 
-      const user = getCurrentUserUC(firebaseAuthRepository);
+      const user = getCurrentUserUC(container.repositories.auth);
 
       const transaction = await updateTransactionUC(
-        firebaseTransactionRepository,
-        firebaseSummaryRepository,
-        firebaseAnalyticsRepository,
-        firebaseTransactionManager,
-        firebaseReceiptService,
+        container.repositories.transaction,
+        container.repositories.summary,
+        container.repositories.analytics,
+        container.transactionManager,
+        container.services.receipt,
         user.uid,
         id,
         data,

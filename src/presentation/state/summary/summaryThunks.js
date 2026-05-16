@@ -1,9 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getUserSummary as getUserSummaryUC } from "../../../application/usecases/summary/getUserSummary";
 import { getCurrentUser as getCurrentUserUC } from "../../../application/usecases/user";
-import { firebaseAuthRepository } from "../../../infrastructure/repositories/firebaseAuthRepository";
-import { firebaseSummaryRepository } from "../../../infrastructure/repositories/firebaseSummaryRepository";
 import { cacheStorage } from "../../../infrastructure/cache/cacheStorage";
+import { container } from "../../../infrastructure/di/container";
 
 const getSummaryCacheKey = (userId) => `summary:${userId}`;
 
@@ -11,7 +10,7 @@ export const loadSummary = createAsyncThunk(
   "summary/load",
   async ({ forceRefresh = false } = {}, { rejectWithValue }) => {
     try {
-      const user = getCurrentUserUC(firebaseAuthRepository);
+      const user = getCurrentUserUC(container.repositories.auth);
       const cacheKey = getSummaryCacheKey(user.uid);
 
       if (!forceRefresh) {
@@ -23,7 +22,7 @@ export const loadSummary = createAsyncThunk(
       }
 
       const summary = await getUserSummaryUC(
-        firebaseSummaryRepository,
+        container.repositories.summary,
         user.uid,
       );
 

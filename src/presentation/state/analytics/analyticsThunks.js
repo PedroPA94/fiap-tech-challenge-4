@@ -1,9 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getCurrentUser as getCurrentUserUC } from "../../../application/usecases/user";
-import { firebaseAuthRepository } from "../../../infrastructure/repositories/firebaseAuthRepository";
 import { getUserAnalytics as getUserAnalyticsUC } from "../../../application/usecases/analytics/getUserAnalytics";
-import { firebaseAnalyticsRepository } from "../../../infrastructure/repositories/firebaseAnalyticsRepository";
 import { cacheStorage } from "../../../infrastructure/cache/cacheStorage";
+import { container } from "../../../infrastructure/di/container";
 
 const getAnalyticsCacheKey = (userId) => `analytics:${userId}`;
 
@@ -11,7 +10,7 @@ export const loadAnalytics = createAsyncThunk(
   "analytics/load",
   async ({ forceRefresh = false } = {}, { rejectWithValue }) => {
     try {
-      const user = getCurrentUserUC(firebaseAuthRepository);
+      const user = getCurrentUserUC(container.repositories.auth);
       const cacheKey = getAnalyticsCacheKey(user.uid);
 
       if (!forceRefresh) {
@@ -23,7 +22,7 @@ export const loadAnalytics = createAsyncThunk(
       }
 
       const analytics = await getUserAnalyticsUC(
-        firebaseAnalyticsRepository,
+        container.repositories.analytics,
         user.uid,
       );
 
