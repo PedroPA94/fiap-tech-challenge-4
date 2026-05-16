@@ -13,7 +13,8 @@ export const register = async (repository, name, email, password) => {
     });
 
     return { user: userData, token: user.token };
-  } catch (_e) {
+  } catch (e) {
+    console.log("Register use case error:", e);
     throw new Error("Não foi possível realizar o cadastro");
   }
 };

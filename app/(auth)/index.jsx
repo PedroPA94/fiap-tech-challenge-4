@@ -56,7 +56,9 @@ const Login = () => {
 
     try {
       await login(validValues.email, validValues.password);
-    } catch (_err) {
+    } catch (err) {
+      console.log("Login error:", err);
+
       const nextAttempts = attempts + 1;
 
       setAttempts(nextAttempts);

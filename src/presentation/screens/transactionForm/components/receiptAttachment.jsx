@@ -39,7 +39,8 @@ export default function ReceiptAttachment({ onChange, error, errorMsg }) {
         size: file.size,
         name: file.name,
       });
-    } catch (_e) {
+    } catch (e) {
+      console.log("File pick error:", e);
       Alert.alert("Erro", "Não foi possível selecionar o arquivo");
     }
   };

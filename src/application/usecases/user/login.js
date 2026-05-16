@@ -14,7 +14,8 @@ export const login = async (repository, email, password) => {
       user: userData,
       token: user.token,
     };
-  } catch (_e) {
+  } catch (e) {
+    console.log("Login use case error:", e);
     throw new Error("Falha ao realizar login");
   }
 };

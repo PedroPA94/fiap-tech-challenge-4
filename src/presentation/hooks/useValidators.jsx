@@ -9,7 +9,7 @@ const CHAR_LIMITS = {
 };
 
 const PASSWORD_REGEX =
-  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,128}$/;
+  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?\d)(?=.*?[#?!@$%^&*-]).{8,128}$/;
 
 export function useValidators() {
   const requiredField = "Campo obrigatório";

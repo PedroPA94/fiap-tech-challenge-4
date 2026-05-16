@@ -45,7 +45,7 @@ export const makeTransaction = (data) => {
 
   if (data.receipt) {
     if (typeof data.receipt !== "object") {
-      throw new Error("Formato de comprovante inválido");
+      throw new TypeError("Formato de comprovante inválido");
     }
     if (
       !ACCEPTED_FILE_TYPES.has(data.receipt.mimeType) ||

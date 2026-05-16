@@ -36,8 +36,7 @@ export const firebaseSummaryRepository = {
   async applyTransactionUpdate(userId, oldValue, newValue, context = null) {
     const ref = doc(db, COLLECTION, userId);
 
-    const incomeDelta =
-      (newValue > 0 ? newValue : 0) - (oldValue > 0 ? oldValue : 0);
+    const incomeDelta = Math.max(newValue, 0) - Math.max(oldValue, 0);
 
     const expenseDelta =
       (newValue < 0 ? Math.abs(newValue) : 0) -

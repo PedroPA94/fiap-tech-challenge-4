@@ -9,7 +9,7 @@ const CONSTRAINTS = {
 
 // Ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial
 const PASSWORD_REGEX =
-  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,128}$/;
+  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?\d)(?=.*?[#?!@$%^&*-]).{8,128}$/;
 
 export const validatePassword = (password) => {
   if (!password || typeof password !== "string") {

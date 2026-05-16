@@ -32,7 +32,7 @@ export const sanitizationUtils = {
     const num = Number(value);
 
     if (Number.isNaN(num)) {
-      throw new Error("Número inválido");
+      throw new TypeError("Número inválido");
     }
 
     return num;

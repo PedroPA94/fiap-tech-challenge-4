@@ -129,7 +129,8 @@ export default function TransactionFormScreen() {
         if (transaction.receipt) {
           handleFormChange("receipt", transaction.receipt);
         }
-      } catch (_e) {
+      } catch (e) {
+        console.log("Load transaction error:", e);
         Alert.alert("Erro", "Falha ao carregar transação");
         router.back();
       }
