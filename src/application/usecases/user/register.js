@@ -1,7 +1,9 @@
-import { makeUser } from "../../../domain/entities/user";
+import { makeUser, validatePassword } from "../../../domain/entities/user";
 
 export const register = async (repository, name, email, password) => {
   try {
+    validatePassword(password);
+
     const user = await repository.register(name, email, password);
 
     const userData = makeUser({

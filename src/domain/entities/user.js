@@ -11,6 +11,20 @@ const CONSTRAINTS = {
 const PASSWORD_REGEX =
   /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,128}$/;
 
+export const validatePassword = (password) => {
+  if (!password || typeof password !== "string") {
+    throw new Error("Senha é obrigatória");
+  }
+
+  if (!PASSWORD_REGEX.test(password)) {
+    throw new Error(
+      "Senha deve ter ao menos 8 caracteres, incluindo maiúscula, minúscula, número e símbolo",
+    );
+  }
+
+  return true;
+};
+
 export const makeUser = (data) => {
   const sanitizedEmail = sanitizationUtils.sanitizeEmail(data.email);
   const sanitizedName = sanitizationUtils.sanitizeText(
@@ -47,12 +61,6 @@ export const makeUser = (data) => {
   ) {
     throw new Error(
       `Nome deve ter entre ${CONSTRAINTS.name.min} e ${CONSTRAINTS.name.max} caracteres`,
-    );
-  }
-
-  if (!PASSWORD_REGEX.test(data.password)) {
-    throw new Error(
-      "Senha deve ter ao menos 8 caracteres, incluindo maiúscula, minúscula, número e símbolo",
     );
   }
 
