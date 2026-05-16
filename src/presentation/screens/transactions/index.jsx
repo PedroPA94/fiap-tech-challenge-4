@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { FlatList, StyleSheet, View, ActivityIndicator } from "react-native";
-import Animated, { Easing, FadeInLeft } from "react-native-reanimated";
+import Animated, { FadeInLeft } from "react-native-reanimated";
 import Typography from "../../components/typography";
 import { spacing, typography, colors } from "../../styles/theme";
 import TransactionItem from "./components/transactionItem";

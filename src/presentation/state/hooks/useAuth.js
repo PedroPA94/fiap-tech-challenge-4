@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, register, logout } from "../auth/authThunks";
-import { clearError, setUser } from "../auth/authSlice";
+import { clearError } from "../auth/authSlice";
 import { makeUser } from "../../../domain/entities/user";
 import { authTokenManager } from "../../../infrastructure/security/authTokenManager";
 
