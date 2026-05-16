@@ -30,7 +30,11 @@ export default function RootLayout() {
 }
 
 function RootNavigation() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoadingSecure } = useAuth();
+
+  if (isLoadingSecure) {
+    return null;
+  }
 
   return (
     <Stack screenOptions={{ headerShown: false }}>

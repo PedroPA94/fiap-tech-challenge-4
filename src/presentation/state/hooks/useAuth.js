@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, register, logout } from "../auth/authThunks";
-import { clearError } from "../auth/authSlice";
+import { clearError, setUser } from "../auth/authSlice";
 import { makeUser } from "../../../domain/entities/user";
 import { authTokenManager } from "../../../infrastructure/security/authTokenManager";
 
@@ -28,14 +28,14 @@ export const useAuth = () => {
     };
 
     loadSecureData();
-  }, []);
+  }, [dispatch]);
 
   const user = state.user ? makeUser(state.user) : null;
 
   return {
     ...state,
     user,
-    isAuthenticated: !!state.user && !!secureToken,
+    isAuthenticated: !isLoadingSecure && !!state.user,
     secureToken,
     secureUserData,
     isLoadingSecure,
