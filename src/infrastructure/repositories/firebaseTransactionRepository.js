@@ -15,16 +15,73 @@ import { db } from "../config/firebase";
 
 const COLLECTION_NAME = "transactions";
 
+const parseFilterDate = (date) => {
+  if (!date) return null;
+
+  if (date instanceof Date) {
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  if (typeof date === "string") {
+    const [day, month, year] = date.split("/");
+
+    if (!day || !month || !year) {
+      return null;
+    }
+
+    const parsedDate = new Date(Number(year), Number(month) - 1, Number(day));
+
+    return Number.isNaN(parsedDate.getTime()) ? null : parsedDate;
+  }
+
+  return null;
+};
+
+const getStartOfDayIso = (date) => {
+  const parsedDate = parseFilterDate(date);
+
+  if (!parsedDate) {
+    return null;
+  }
+
+  const d = new Date(parsedDate);
+  d.setHours(0, 0, 0, 0);
+
+  return d.toISOString();
+};
+
+const getEndOfDayIso = (date) => {
+  const parsedDate = parseFilterDate(date);
+
+  if (!parsedDate) {
+    return null;
+  }
+
+  const d = new Date(parsedDate);
+  d.setHours(23, 59, 59, 999);
+
+  return d.toISOString();
+};
 export const firebaseTransactionRepository = {
-  getByUserId: async (userId, filters, { limit: pageSize, cursor }) => {
+  getByUserId: async (userId, filters = {}, { limit: pageSize, cursor }) => {
+    const startDate = getStartOfDayIso(filters?.date);
+    const endDate = getEndOfDayIso(filters?.date);
+
+    const dateFilter =
+      startDate && endDate
+        ? {
+            startDate,
+            endDate,
+          }
+        : null;
     let constraints = [
       where("userId", "==", userId),
 
-      ...(filters.category ? [where("category", "==", filters.category)] : []),
+      ...(filters?.category ? [where("category", "==", filters.category)] : []),
 
-      ...(filters.startDate ? [where("date", ">=", filters.startDate)] : []),
+      ...(dateFilter ? [where("date", ">=", dateFilter.startDate)] : []),
 
-      ...(filters.endDate ? [where("date", "<=", filters.endDate)] : []),
+      ...(dateFilter ? [where("date", "<=", dateFilter.endDate)] : []),
 
       orderBy("date", "desc"),
       limit(pageSize),

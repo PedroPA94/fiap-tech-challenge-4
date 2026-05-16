@@ -67,8 +67,8 @@ export const addTransaction = createAsyncThunk(
         receipt,
       );
 
-      await dispatch(loadSummary());
-      await dispatch(loadAnalytics());
+      dispatch(loadSummary());
+      dispatch(loadAnalytics());
 
       return transaction.toJSON();
     } catch (err) {
@@ -97,8 +97,8 @@ export const updateTransaction = createAsyncThunk(
         receipt,
       );
 
-      await dispatch(loadSummary());
-      await dispatch(loadAnalytics());
+      dispatch(loadSummary());
+      dispatch(loadAnalytics());
 
       return transaction.toJSON();
     } catch (err) {
