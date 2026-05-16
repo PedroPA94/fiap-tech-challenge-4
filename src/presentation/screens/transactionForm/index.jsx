@@ -31,7 +31,7 @@ import { useTransactions } from "../../state/hooks/useTransactions";
 import { container } from "../../../infrastructure/di/container";
 
 export default function TransactionFormScreen() {
-  const ACCEPTED_FILE_TYPES = ["image/*", "application/pdf"];
+  const ACCEPTED_FILE_TYPES = new Set(["image/*", "application/pdf"]);
   const MAX_FILE_SIZE = 300 * 1024; // 300KB
 
   const { id } = useLocalSearchParams();
@@ -84,7 +84,7 @@ export default function TransactionFormScreen() {
       if (typeof values.receipt !== "object") {
         errors.receipt = "Formato de comprovante inválido";
       } else if (
-        !ACCEPTED_FILE_TYPES.includes(values.receipt.mimeType) ||
+        !ACCEPTED_FILE_TYPES.has(values.receipt.mimeType) ||
         values.receipt.size > MAX_FILE_SIZE
       ) {
         errors.receipt =
@@ -153,7 +153,7 @@ export default function TransactionFormScreen() {
 
       const transactionData = {
         type: validValues.type,
-        value: parseFloat(validValues.value.replace(",", ".")),
+        value: Number.parseFloat(validValues.value.replace(",", ".")),
         category: validValues.category,
         description: validValues.description,
         date: isoDate,

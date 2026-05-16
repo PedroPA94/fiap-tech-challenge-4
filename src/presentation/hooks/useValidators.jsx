@@ -58,7 +58,7 @@ export function useValidators() {
       return "Valor obrigatório";
     }
 
-    if (value && isNaN(parseFloat(value))) {
+    if (value && Number.isNaN(Number.parseFloat(value))) {
       return "Insira um valor numérico válido";
     }
 

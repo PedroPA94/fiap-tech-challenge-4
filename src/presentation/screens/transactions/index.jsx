@@ -121,7 +121,7 @@ const TransactionsScreen = () => {
             paddingHorizontal: spacing.sm,
             paddingVertical: spacing.md,
           }}
-          ItemSeparatorComponent={() => <View style={{ height: spacing.md }} />}
+          ItemSeparatorComponent={TransactionSeparator}
           ListHeaderComponent={ListHeader}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
@@ -179,6 +179,9 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontSize: typography.size.md,
   },
+  separator: {
+    height: spacing.md,
+  },
 });
 
 const AnimatedTransactionItem = React.memo(({ item, editTransaction }) => {
@@ -207,3 +210,5 @@ AnimatedTransactionItem.propTypes = {
   }).isRequired,
   editTransaction: PropTypes.func.isRequired,
 };
+
+const TransactionSeparator = () => <View style={styles.separator} />;

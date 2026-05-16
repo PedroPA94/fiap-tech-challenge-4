@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { colors } from "../../src/presentation/styles/theme";
 import PropTypes from "prop-types";
+import { colors } from "../../src/presentation/styles/theme";
 
 const HomeTabIcon = ({ color, focused }) => (
   <Ionicons name={focused ? "home" : "home-outline"} size={22} color={color} />
@@ -40,9 +40,7 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: "Início",
-          tabBarIcon: ({ color, focused }) => (
-            <HomeTabIcon color={color} focused={focused} />
-          ),
+          tabBarIcon: HomeTabIcon,
         }}
       />
 
@@ -50,9 +48,7 @@ export default function TabsLayout() {
         name="transactions"
         options={{
           title: "Extrato",
-          tabBarIcon: ({ color, focused }) => (
-            <TransactionsTabIcon color={color} focused={focused} />
-          ),
+          tabBarIcon: TransactionsTabIcon,
         }}
       />
     </Tabs>
