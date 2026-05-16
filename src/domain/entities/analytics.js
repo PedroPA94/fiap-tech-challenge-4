@@ -31,7 +31,7 @@ export const makeAnalytics = (data) => {
       const entries = Object.entries(this.monthlyCashFlow);
 
       return entries
-        .sort(([a], [b]) => new Date(a) - new Date(b))
+        .toSorted(([a], [b]) => new Date(a) - new Date(b))
         .slice(-limit)
         .map(([monthKey, value]) => ({
           monthKey,

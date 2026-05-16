@@ -6,10 +6,14 @@ export const getUserTransactions = async (
   filters,
   { limit = 10, cursor = null },
 ) => {
-  const { data, nextCursor } = await repository.getByUserId(userId, filters, {
-    limit,
-    cursor,
-  });
+  const { data, nextCursor } = await repository.getByUserId(
+    userId,
+    {
+      limit,
+      cursor,
+    },
+    filters,
+  );
 
   return {
     transactions: data.map((t) => makeTransaction(t)),

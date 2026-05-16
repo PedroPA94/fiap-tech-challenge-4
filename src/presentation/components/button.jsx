@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { colors, radius, shadow, spacing } from "../styles/theme";
 import Typography from "./typography";
@@ -21,6 +22,23 @@ const Button = ({ children, onPress, secondary, style }) => {
       </Typography>
     </TouchableOpacity>
   );
+};
+
+Button.propTypes = {
+  children: PropTypes.node.isRequired,
+  onPress: PropTypes.func,
+  secondary: PropTypes.bool,
+  style: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.number,
+  ]),
+};
+
+Button.defaultProps = {
+  onPress: undefined,
+  secondary: false,
+  style: undefined,
 };
 
 export default Button;

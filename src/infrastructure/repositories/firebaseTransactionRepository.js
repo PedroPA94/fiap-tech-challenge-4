@@ -63,7 +63,7 @@ const getEndOfDayIso = (date) => {
   return d.toISOString();
 };
 export const firebaseTransactionRepository = {
-  getByUserId: async (userId, filters = {}, { limit: pageSize, cursor }) => {
+  getByUserId: async (userId, { limit: pageSize, cursor }, filters = {}) => {
     const startDate = getStartOfDayIso(filters?.date);
     const endDate = getEndOfDayIso(filters?.date);
 

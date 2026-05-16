@@ -1,6 +1,6 @@
 import { sanitizationUtils } from "../utils/sanitizationUtils";
 
-const ACCEPTED_FILE_TYPES = ["image/*", "application/pdf"];
+const ACCEPTED_FILE_TYPES = new Set(["image/*", "application/pdf"]);
 const MAX_FILE_SIZE = 300 * 1024; // 300KB
 
 // Limites de caracteres
@@ -48,7 +48,7 @@ export const makeTransaction = (data) => {
       throw new Error("Formato de comprovante inválido");
     }
     if (
-      !ACCEPTED_FILE_TYPES.includes(data.receipt.mimeType) ||
+      !ACCEPTED_FILE_TYPES.has(data.receipt.mimeType) ||
       data.receipt.size > MAX_FILE_SIZE
     ) {
       throw new Error(
