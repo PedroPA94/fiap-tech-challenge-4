@@ -67,8 +67,8 @@ export const addTransaction = createAsyncThunk(
         receipt,
       );
 
-      dispatch(loadSummary());
-      dispatch(loadAnalytics());
+      dispatch(loadSummary({ forceRefresh: true }));
+      dispatch(loadAnalytics({ forceRefresh: true }));
 
       return transaction.toJSON();
     } catch (err) {
@@ -97,8 +97,8 @@ export const updateTransaction = createAsyncThunk(
         receipt,
       );
 
-      dispatch(loadSummary());
-      dispatch(loadAnalytics());
+      dispatch(loadSummary({ forceRefresh: true }));
+      dispatch(loadAnalytics({ forceRefresh: true }));
 
       return transaction.toJSON();
     } catch (err) {
