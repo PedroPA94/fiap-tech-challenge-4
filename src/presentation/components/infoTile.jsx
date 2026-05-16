@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
 import { colors, spacing, typography } from "../styles/theme";
 import Typography from "./typography";
+import PropTypes from "prop-types";
 
 const InfoTile = ({
   category,
@@ -54,6 +55,29 @@ const InfoTile = ({
       </View>
     </View>
   );
+};
+
+InfoTile.propTypes = {
+  category: PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    icon: PropTypes.string.isRequired,
+    baseColor: PropTypes.string.isRequired,
+    softColor: PropTypes.string.isRequired,
+  }).isRequired,
+  value: PropTypes.string.isRequired,
+  tone: PropTypes.oneOf(["light", "dark"]),
+  reversed: PropTypes.bool,
+  style: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.number,
+  ]),
+};
+
+InfoTile.defaultProps = {
+  tone: "dark",
+  reversed: false,
+  style: undefined,
 };
 
 export default InfoTile;

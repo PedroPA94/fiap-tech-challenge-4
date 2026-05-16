@@ -1,6 +1,7 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Typography from "../../../components/typography";
 import { colors, radius, spacing, typography } from "../../../styles/theme";
+import PropTypes from "prop-types";
 
 export default function TransactionTypeSelector({ type, onTypeChange }) {
   return (
@@ -43,6 +44,11 @@ export default function TransactionTypeSelector({ type, onTypeChange }) {
     </View>
   );
 }
+
+TransactionTypeSelector.propTypes = {
+  type: PropTypes.oneOf(["expense", "income"]).isRequired,
+  onTypeChange: PropTypes.func.isRequired,
+};
 
 const styles = StyleSheet.create({
   typeSelector: {

@@ -1,10 +1,16 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { colors } from "../../src/presentation/styles/theme";
+import PropTypes from "prop-types";
 
 const HomeTabIcon = ({ color, focused }) => (
   <Ionicons name={focused ? "home" : "home-outline"} size={22} color={color} />
 );
+
+HomeTabIcon.propTypes = {
+  color: PropTypes.string.isRequired,
+  focused: PropTypes.bool.isRequired,
+};
 
 const TransactionsTabIcon = ({ color, focused }) => (
   <Ionicons
@@ -13,6 +19,11 @@ const TransactionsTabIcon = ({ color, focused }) => (
     color={color}
   />
 );
+
+TransactionsTabIcon.propTypes = {
+  color: PropTypes.string.isRequired,
+  focused: PropTypes.bool.isRequired,
+};
 
 export default function TabsLayout() {
   return (

@@ -6,6 +6,7 @@ import { categories, colors, spacing, typography } from "../../../styles/theme";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useMemo } from "react";
 import { formatCurrency } from "../../../utils/currencyFormatter";
+import PropTypes from "prop-types";
 
 const TransactionItem = ({ value, date, description, category, onPress }) => {
   const categoryData = categories[category] ?? categories.other;
@@ -41,6 +42,18 @@ const TransactionItem = ({ value, date, description, category, onPress }) => {
       <Ionicons name="chevron-forward" size={20} color="grey" />
     </Card>
   );
+};
+
+TransactionItem.propTypes = {
+  value: PropTypes.number.isRequired,
+  date: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
+  onPress: PropTypes.func,
+};
+
+TransactionItem.defaultProps = {
+  onPress: undefined,
 };
 
 export default React.memo(TransactionItem);

@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import { colors, radius, spacing } from "../styles/theme";
+import PropTypes from "prop-types";
 
 const Card = ({ children, kind = "neutral", style, onPress }) => {
   if (onPress) {
@@ -23,6 +24,23 @@ const Card = ({ children, kind = "neutral", style, onPress }) => {
       {children}
     </View>
   );
+};
+
+Card.propTypes = {
+  children: PropTypes.node.isRequired,
+  kind: PropTypes.oneOf(["neutral", "primary"]),
+  style: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.number,
+  ]),
+  onPress: PropTypes.func,
+};
+
+Card.defaultProps = {
+  kind: "neutral",
+  style: undefined,
+  onPress: undefined,
 };
 
 export default Card;

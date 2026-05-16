@@ -8,6 +8,7 @@ import {
   spacing,
   typography,
 } from "../../../styles/theme";
+import PropTypes from "prop-types";
 
 export default function TransactionCategorySelector({
   type,
@@ -101,6 +102,25 @@ export default function TransactionCategorySelector({
     </View>
   );
 }
+
+TransactionCategorySelector.propTypes = {
+  type: PropTypes.oneOf(["income", "expense"]).isRequired,
+  category: PropTypes.string,
+  onCategoryChange: PropTypes.func,
+  showCategoryPicker: PropTypes.bool,
+  onShowPickerChange: PropTypes.func,
+  error: PropTypes.bool,
+  errorMsg: PropTypes.string,
+};
+
+TransactionCategorySelector.defaultProps = {
+  category: "",
+  onCategoryChange: undefined,
+  showCategoryPicker: false,
+  onShowPickerChange: undefined,
+  error: false,
+  errorMsg: "",
+};
 
 const styles = StyleSheet.create({
   fieldLabel: {

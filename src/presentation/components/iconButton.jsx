@@ -1,5 +1,6 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { colors, radius, spacing } from "../styles/theme";
+import PropTypes from "prop-types";
 
 const IconButton = ({ icon, onPress, secondary, round, style }) => {
   return (
@@ -16,6 +17,26 @@ const IconButton = ({ icon, onPress, secondary, round, style }) => {
       {icon && <View style={styles.icon}>{icon}</View>}
     </TouchableOpacity>
   );
+};
+
+IconButton.propTypes = {
+  icon: PropTypes.node,
+  onPress: PropTypes.func,
+  secondary: PropTypes.bool,
+  round: PropTypes.bool,
+  style: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.number,
+  ]),
+};
+
+IconButton.defaultProps = {
+  icon: null,
+  onPress: undefined,
+  secondary: false,
+  round: false,
+  style: undefined,
 };
 
 export default IconButton;

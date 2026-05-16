@@ -5,6 +5,7 @@ import { colors, radius, spacing, typography } from "../../../styles/theme";
 import { useState } from "react";
 
 import * as DocumentPicker from "expo-document-picker";
+import PropTypes from "prop-types";
 
 const MAX_FILE_SIZE = 300 * 1024; // 300KB
 
@@ -63,6 +64,18 @@ export default function ReceiptAttachment({ onChange, error, errorMsg }) {
     </>
   );
 }
+
+ReceiptAttachment.propTypes = {
+  onChange: PropTypes.func,
+  error: PropTypes.bool,
+  errorMsg: PropTypes.string,
+};
+
+ReceiptAttachment.defaultProps = {
+  onChange: undefined,
+  error: false,
+  errorMsg: "",
+};
 
 const styles = StyleSheet.create({
   receiptPlaceholder: {

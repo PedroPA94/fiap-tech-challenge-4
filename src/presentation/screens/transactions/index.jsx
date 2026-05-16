@@ -9,6 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useTransactions } from "../../state/hooks/useTransactions";
 import { useDebouncedValue } from "../../hooks/useDebouncedValue";
+import PropTypes from "prop-types";
 
 const TransactionsScreen = () => {
   const router = useRouter();
@@ -195,3 +196,14 @@ const AnimatedTransactionItem = React.memo(({ item, editTransaction }) => {
 });
 
 AnimatedTransactionItem.displayName = "AnimatedTransactionItem";
+
+AnimatedTransactionItem.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
+    description: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+  }).isRequired,
+  editTransaction: PropTypes.func.isRequired,
+};

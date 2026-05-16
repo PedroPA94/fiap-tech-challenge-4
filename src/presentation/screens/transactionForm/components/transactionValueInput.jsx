@@ -1,6 +1,7 @@
 import { StyleSheet, TextInput, View } from "react-native";
 import Typography from "../../../components/typography";
 import { colors, spacing, typography } from "../../../styles/theme";
+import PropTypes from "prop-types";
 
 export default function TransactionValueInput({
   type,
@@ -43,6 +44,19 @@ export default function TransactionValueInput({
     </View>
   );
 }
+
+TransactionValueInput.propTypes = {
+  type: PropTypes.oneOf(["expense", "income"]).isRequired,
+  value: PropTypes.string.isRequired,
+  onChangeText: PropTypes.func.isRequired,
+  error: PropTypes.bool,
+  errorMsg: PropTypes.string,
+};
+
+TransactionValueInput.defaultProps = {
+  error: false,
+  errorMsg: "",
+};
 
 const styles = StyleSheet.create({
   valueSection: {

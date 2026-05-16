@@ -2,6 +2,7 @@ import { useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { colors, radius, spacing, typography } from "../styles/theme";
 import Typography from "./typography";
+import PropTypes from "prop-types";
 
 const Input = ({
   label,
@@ -45,6 +46,28 @@ const Input = ({
       )}
     </View>
   );
+};
+
+Input.propTypes = {
+  label: PropTypes.string,
+  icon: PropTypes.node,
+  style: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.number,
+  ]),
+  error: PropTypes.bool,
+  errorMsg: PropTypes.string,
+  hint: PropTypes.string,
+};
+
+Input.defaultProps = {
+  label: undefined,
+  icon: null,
+  style: undefined,
+  error: false,
+  errorMsg: undefined,
+  hint: undefined,
 };
 
 export default Input;

@@ -2,6 +2,7 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Input from "../../../components/input";
 import { Ionicons } from "@expo/vector-icons";
+import PropTypes from "prop-types";
 
 export default function TransactionDateInput({
   date,
@@ -41,6 +42,21 @@ export default function TransactionDateInput({
     </View>
   );
 }
+
+TransactionDateInput.propTypes = {
+  date: PropTypes.string.isRequired,
+  onDateChange: PropTypes.func.isRequired,
+  onDateSelect: PropTypes.func.isRequired,
+  showDatePicker: PropTypes.bool.isRequired,
+  onShowDatePickerChange: PropTypes.func.isRequired,
+  error: PropTypes.bool,
+  errorMsg: PropTypes.string,
+};
+
+TransactionDateInput.defaultProps = {
+  error: false,
+  errorMsg: "",
+};
 
 const styles = StyleSheet.create({
   dateInputWrapper: {

@@ -5,6 +5,7 @@ import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import Input from "../../../components/input";
 import Typography from "../../../components/typography";
 import { categories, colors, spacing, typography } from "../../../styles/theme";
+import PropTypes from "prop-types";
 
 const TransactionsFilter = ({
   search,
@@ -145,6 +146,20 @@ const TransactionsFilter = ({
       </View>
     </View>
   );
+};
+
+TransactionsFilter.propTypes = {
+  search: PropTypes.string.isRequired,
+  onSearchChange: PropTypes.func.isRequired,
+  selectedCategory: PropTypes.string,
+  onCategoryChange: PropTypes.func.isRequired,
+  selectedDate: PropTypes.string,
+  onDateChange: PropTypes.func.isRequired,
+};
+
+TransactionsFilter.defaultProps = {
+  selectedCategory: null,
+  selectedDate: null,
 };
 
 export default TransactionsFilter;
