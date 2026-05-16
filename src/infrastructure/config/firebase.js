@@ -36,26 +36,28 @@ const firebaseConfig = {
   databaseURL: "",
 };
 
-let app;
+let firebaseApp;
 
 if (getApps().length === 0) {
-  app = initializeApp(firebaseConfig);
+  firebaseApp = initializeApp(firebaseConfig);
 } else {
-  app = getApp();
+  firebaseApp = getApp();
 }
 
-let auth;
+let firebaseAuth;
 
 if (Platform.OS === "web") {
-  auth = initializeAuth(app, {
+  firebaseAuth = initializeAuth(firebaseApp, {
     persistence: browserLocalPersistence,
   });
 } else {
-  auth = initializeAuth(app, {
+  firebaseAuth = initializeAuth(firebaseApp, {
     persistence: getReactNativePersistence(AsyncStorage),
   });
 }
 
-const db = getFirestore(app);
+const db = getFirestore(firebaseApp);
+const app = firebaseApp;
+const auth = firebaseAuth;
 
 export { app, auth, db };
