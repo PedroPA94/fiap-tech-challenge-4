@@ -145,9 +145,7 @@ As correções sugeridas exigem atualização para versões associadas ao **Expo
 
 ### SonarQube
 
-O projeto também foi analisado com **SonarQube** para identificação de pontos de melhoria relacionados à qualidade de código.
-
-Alguns apontamentos ainda serão tratados em melhorias futuras.
+O projeto também foi analisado com **SonarQube** para identificação de pontos de melhoria relacionados à qualidade de código. Todos os apontamentos foram corrigidos.
 
 ## Como executar o projeto
 
