@@ -2,6 +2,18 @@ import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { colors } from "../../src/presentation/styles/theme";
 
+const HomeTabIcon = ({ color, focused }) => (
+  <Ionicons name={focused ? "home" : "home-outline"} size={22} color={color} />
+);
+
+const TransactionsTabIcon = ({ color, focused }) => (
+  <Ionicons
+    name={focused ? "receipt" : "receipt-outline"}
+    size={22}
+    color={color}
+  />
+);
+
 export default function TabsLayout() {
   return (
     <Tabs
@@ -18,11 +30,7 @@ export default function TabsLayout() {
         options={{
           title: "Início",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "home" : "home-outline"}
-              size={22}
-              color={color}
-            />
+            <HomeTabIcon color={color} focused={focused} />
           ),
         }}
       />
@@ -32,11 +40,7 @@ export default function TabsLayout() {
         options={{
           title: "Extrato",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "receipt" : "receipt-outline"}
-              size={22}
-              color={color}
-            />
+            <TransactionsTabIcon color={color} focused={focused} />
           ),
         }}
       />

@@ -1,14 +1,14 @@
 import { makeTransaction } from "../../../domain/entities/transaction";
 
 export const createTransaction = async (
-  transactionRepository,
-  summaryRepository,
-  analyticsRepository,
-  transactionManager,
-  receiptService,
-  userId,
-  transactionData,
-  receipt,
+  {
+    transactionRepository,
+    summaryRepository,
+    analyticsRepository,
+    transactionManager,
+    receiptService,
+  },
+  { userId, transactionData, receipt },
 ) => {
   return await transactionManager.run(async (context) => {
     const transaction = makeTransaction({

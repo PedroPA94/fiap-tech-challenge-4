@@ -7,6 +7,14 @@ import { firebaseTransactionManager } from "../transactional/firebaseTransaction
 import { authTokenManager } from "../security/authTokenManager";
 import { cacheStorage } from "../cache/cacheStorage";
 
+const transactionUseCaseDependencies = {
+  transactionRepository: firebaseTransactionRepository,
+  summaryRepository: firebaseSummaryRepository,
+  analyticsRepository: firebaseAnalyticsRepository,
+  transactionManager: firebaseTransactionManager,
+  receiptService: firebaseReceiptService,
+};
+
 export const container = {
   repositories: {
     auth: firebaseAuthRepository,
@@ -22,4 +30,8 @@ export const container = {
   transactionManager: firebaseTransactionManager,
   authTokenManager: authTokenManager,
   cacheStorage: cacheStorage,
+
+  useCaseDependencies: {
+    transaction: transactionUseCaseDependencies,
+  },
 };

@@ -51,14 +51,8 @@ export const addTransaction = createAsyncThunk(
       const user = getCurrentUserUC(container.repositories.auth);
 
       const transaction = await createTransactionUC(
-        container.repositories.transaction,
-        container.repositories.summary,
-        container.repositories.analytics,
-        container.transactionManager,
-        container.services.receipt,
-        user.uid,
-        data,
-        receipt,
+        container.useCaseDependencies.transaction,
+        { userId: user.uid, transactionData: data, receipt },
       );
 
       dispatch(loadSummary({ forceRefresh: true }));
@@ -80,15 +74,8 @@ export const updateTransaction = createAsyncThunk(
       const user = getCurrentUserUC(container.repositories.auth);
 
       const transaction = await updateTransactionUC(
-        container.repositories.transaction,
-        container.repositories.summary,
-        container.repositories.analytics,
-        container.transactionManager,
-        container.services.receipt,
-        user.uid,
-        id,
-        data,
-        receipt,
+        container.useCaseDependencies.transaction,
+        { userId: user.uid, transactionId: id, transactionData: data, receipt },
       );
 
       dispatch(loadSummary({ forceRefresh: true }));

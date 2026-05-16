@@ -1,15 +1,14 @@
 import { makeTransaction } from "../../../domain/entities/transaction";
 
 export const updateTransaction = async (
-  transactionRepository,
-  summaryRepository,
-  analyticsRepository,
-  transactionManager,
-  receiptService,
-  userId,
-  transactionId,
-  transactionData,
-  receipt,
+  {
+    transactionRepository,
+    summaryRepository,
+    analyticsRepository,
+    transactionManager,
+    receiptService,
+  },
+  { userId, transactionId, transactionData, receipt },
 ) => {
   if (!transactionId) {
     throw new Error("ID da transação é obrigatório para atualização");
