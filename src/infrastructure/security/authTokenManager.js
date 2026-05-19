@@ -4,7 +4,7 @@ import * as SecureStore from "expo-secure-store";
  * Gerenciador seguro de tokens de autenticação
  * Usa expo-secure-store para armazenar dados sensíveis de sessão. *
  *
- * Nota: As chaves devem conter apenas caracteres alpanuméricos, ".", "-", e "_"
+ * Nota: As chaves devem conter apenas caracteres alfanuméricos, ".", "-", e "_"
  * conforme requisitos do expo-secure-store
  */
 
